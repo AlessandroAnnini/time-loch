@@ -146,17 +146,16 @@ export class MetronomeEngine {
     // Schedule completion callback
     if (this.onComplete) {
       Tone.Transport.schedule(() => {
-        // Call completion callback first (which triggers stopPlayback in UI)
+        // Store callback before cleanup
         const callback = this.onComplete;
-        this.onComplete = null;
         
-        // Clean up after a small delay to allow the last beat to finish
-        setTimeout(() => {
-          this.stop();
-          if (callback) {
-            callback();
-          }
-        }, 100);
+        // Clean up Transport and resources
+        this.cleanupPlayback();
+        
+        // Notify UI that playback completed
+        if (callback) {
+          callback();
+        }
       }, currentTime);
     }
 
@@ -164,13 +163,8 @@ export class MetronomeEngine {
     Tone.Transport.start();
   }
 
-  public stop(): void {
-    // Stop and reset Transport
-    Tone.Transport.stop();
-    Tone.Transport.cancel(); // Cancel all scheduled events
-    Tone.Transport.position = 0; // Reset to beginning
-
-    // Dispose of audio resources
+  private cleanupPlayback(): void {
+    // Dispose of audio resources but keep Transport ready for next playback
     if (this.synth) {
       this.synth.dispose();
       this.synth = null;
@@ -185,6 +179,20 @@ export class MetronomeEngine {
     this.currentBeat = 0;
     this.currentMeasure = 0;
     this.onComplete = null;
+  }
+
+  public stop(): void {
+    // Stop Transport
+    Tone.Transport.stop();
+    
+    // Cancel all scheduled events
+    Tone.Transport.cancel();
+    
+    // Reset position to beginning
+    Tone.Transport.position = 0;
+
+    // Clean up resources
+    this.cleanupPlayback();
   }
 
   public async updateVolume(volume: number): Promise<void> {
