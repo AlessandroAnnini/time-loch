@@ -1,4 +1,4 @@
-import { ArrowLeft, ExternalLink, Github, Heart, Music } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Github, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/mode-toggle';
 import { useUIStore } from '@/stores/useUIStore';
@@ -31,24 +31,24 @@ export function AboutPage() {
       <main className="container px-4 py-8 max-w-2xl" role="main">
         <div className="space-y-10">
           {/* Hero Section */}
-          <section className="text-center space-y-4">
+          <div className="text-center space-y-6">
             <div className="flex justify-center">
-              <div className="relative">
-                <Music className="h-16 w-16 text-primary animate-pulse" />
-                <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full" />
-              </div>
+              <img
+                src="/splash.png"
+                alt="Time Loch"
+                className="h-[600px] w-auto rounded-2xl shadow-2xl"
+              />
             </div>
-            <h1 className="text-4xl font-bold tracking-tight">Time Loch</h1>
-            <p className="text-xl text-muted-foreground max-w-lg mx-auto">
-              An advanced metronome Progressive Web App (PWA) designed for
-              musicians working with complex song structures.
-            </p>
-            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <span>Version 1.0.0</span>
-              <span>•</span>
-              <span>December 2025</span>
+            <div className="space-y-2">
+              <h1 className="text-4xl font-bold tracking-tight">Time Loch</h1>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                A metronome app designed for musicians who practice with complex
+                song structures. Define your song once, then focus on playing -
+                Time Loch handles the tempo changes, time signatures, and
+                section transitions automatically.
+              </p>
             </div>
-          </section>
+          </div>
 
           {/* Band Information */}
           <section aria-labelledby="band-heading" className="space-y-4">
