@@ -11,7 +11,18 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icon.png', 'splash.png'],
+      includeAssets: [
+        'icon.png',
+        'icon-192.png',
+        'icon-512.png',
+        'icon-maskable.png',
+        'splash.png',
+        'splash-iphone-14-pro-max.png',
+        'splash-iphone-14-pro.png',
+        'splash-iphone-13-pro-max.png',
+        'splash-iphone-13-pro.png',
+        'splash-iphone-x.png',
+      ],
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         runtimeCaching: [
@@ -44,19 +55,19 @@ export default defineConfig({
         scope: '/',
         icons: [
           {
-            src: 'icon.png',
+            src: 'icon-192.png',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'any',
           },
           {
-            src: 'icon.png',
+            src: 'icon-512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any',
           },
           {
-            src: 'icon.png',
+            src: 'icon-maskable.png',
             sizes: '1024x1024',
             type: 'image/png',
             purpose: 'maskable',

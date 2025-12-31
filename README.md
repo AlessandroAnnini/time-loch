@@ -2,7 +2,7 @@
 
 An advanced metronome Progressive Web App (PWA) designed for musicians working with complex song structures. Built specifically for the band **[Devon Loch](https://devonloch.com)** to rehearse progressive rock compositions with multiple sections, varying tempos, and diverse time signatures.
 
-**Name Origin:** A wordplay between **Devon Loch** (band name) + **Time Lock** (locking tempo/rhythm) = **Time Loch**
+**Name Origin:** A wordplay combining **Devon Loch** (band name) + **Time Lock** (locking tempo/rhythm) = **Time Loch**
 
 ## Overview
 
@@ -13,10 +13,15 @@ Time Loch structures songs into clearly defined, tempo-accurate sections, helpin
 ### Core Functionality
 
 - **Multi-Section Songs**: Create songs with unlimited sections, each with independent tempo, time signature, and duration
+- **Real-Time Measure Counter**: Visual feedback showing current measure (x/n) during playback with large, bold text for distance visibility
+- **Section Editing**: Edit any section's properties (name, BPM, time signature, measures) using the same UI as creation
+- **Drag-and-Drop Reordering**: Rearrange sections within a song using intuitive drag handles
 - **Sample-Accurate Timing**: Uses Tone.js Web Audio API with Transport scheduling for professional-grade accuracy
 - **BPM Range**: 35-250 BPM (industry standard for metronomes)
 - **Time Signatures**: Support for simple (4/4, 3/4), compound (6/8, 9/8), and odd meters (5/4, 7/8)
-- **Accent Patterns**: First beat accent by default, with optional custom patterns
+- **Accent Patterns**: First beat accent by default (velocity 1.0 vs 0.85), with optional custom patterns
+- **Adjustable Volume**: Metronome volume control with persistent settings
+- **Sound Profiles**: Choose between Classic (Synth) or Percussive (MembraneSynth) click sounds
 - **Deterministic Playback**: No loops, no resume, no partial sections—always predictable behavior
 - **Song-Level Playback**: Play entire song from start to finish with automatic section transitions
 - **Section-Level Playback**: Start from any section and play through to the end
@@ -25,12 +30,13 @@ Time Loch structures songs into clearly defined, tempo-accurate sections, helpin
 
 - **Mobile-First Design**: Optimized for touch interactions with 44x44px minimum touch targets
 - **One-Hand Operation**: All critical functions accessible with thumb on phone
+- **Inline Editing**: Edit song titles and notes directly without opening dialogs
 - **Dark/Light Theme**: Persistent theme preference with system detection
 - **Offline-First**: Full PWA functionality without internet connection
-- **Touch Gestures**: Long-press (500ms) to delete, tap to select/play
-- **Visual Feedback**: Toast notifications for all user actions
+- **Touch Gestures**: Long-press (500ms) to delete, tap to select/play, drag to reorder
+- **Visual Feedback**: Toast notifications for all user actions with descriptive messages
 - **Accessibility**: WCAG AA compliant with semantic HTML, ARIA labels, keyboard navigation
-- **Rehearsal-Safe**: Phone-on-floor usage pattern with clear visual hierarchy
+- **Rehearsal-Safe**: Phone-on-floor usage pattern with clear visual hierarchy and distance-readable text
 
 ### Data Management
 
@@ -66,10 +72,11 @@ Time Loch structures songs into clearly defined, tempo-accurate sections, helpin
 ### UI & Styling
 
 - **Tailwind CSS 4.1.18** - Utility-first styling with dark mode
-- **shadcn/ui** - Copy-paste accessible component library
-- **Sonner** - Toast notification system
-- **Lucide React** - Icon library
+- **shadcn/ui** - Accessible component library (Button, Dialog, Input, Label, Textarea, Dropdown Menu)
+- **Sonner** - Toast notification system with success/error states
+- **Lucide React** - Comprehensive icon library (Play, Stop, Plus, Edit2, Trash2, GripVertical, etc.)
 - **next-themes** - Theme provider with system detection
+- **@dnd-kit** - Drag-and-drop functionality for section reordering
 
 ### PWA
 
@@ -125,32 +132,45 @@ npm run preview
 ### Song Page
 
 - **Edit Title**: Tap title to edit inline, auto-saves on blur
-- **Edit Notes**: Tap notes textarea, auto-saves on blur
-- **View Sections**: Ordered list showing BPM, time signature, measures
-- **Add Section**: Tap **+ Add Section** button
-- **Play Song**: Play button plays from first section through to end
-- **Play Section**: Tap play icon on section to start from that section
-- **Stop Playback**: Stop button appears during playback (disables all play buttons)
-- **Delete Section**: Long-press (500ms) on section → confirm deletion
+- **Edit Notes**: Tap notes to edit inline, auto-saves on blur (supports empty notes)
+- **View Sections**: Ordered list showing BPM, time signature, measures, and current playback position
+- **Measure Counter**: Real-time display of current measure (x/n) during section playback
+- **Add Section**: Tap **+ Add Section** button to create new sections
+- **Edit Section**: Tap edit icon (pencil) to modify section properties
+- **Reorder Sections**: Drag sections by the grip handle to rearrange order
+- **Play Song**: Play button starts from first section through to end
+- **Play Section**: Tap play icon on any section to start from that point
+- **Stop Playback**: Stop button appears during playback (all edit/play buttons disabled)
+- **Delete Section**: Tap trash icon, confirm deletion in dialog
 
 ### Creating Sections
 
-1. Tap **Add Section** on song page
+1. Tap **+ Add Section** on song page
 2. Configure:
    - **Section name** (e.g., "Intro", "Verse 1")
    - **BPM** (35-250, validated)
    - **Time signature** (beats/measure, note value)
    - **Measures** (1-999, validated)
-3. Tap **Create Section**
+3. Tap **Add Section**
+
+### Editing Sections
+
+1. Tap the **edit icon** (pencil) on any section
+2. Modify any field (same UI as creation)
+3. Tap **Save Changes** to update
+4. Changes apply immediately to the section
 
 ### Playback Model
 
 - **Song-Level**: Plays all sections in order from start to finish
 - **Section-Level**: Starts at selected section, plays through to song end
+- **Measure Counter**: Displays current measure within active section (e.g., "3/8" = measure 3 of 8)
+- **Accurate Timing**: Measure counter updates on accent beat (start of each measure)
 - **No Loops**: Playback never repeats, always stops at song end
 - **No Resume**: Always starts from first measure of section
 - **No Partial**: Never starts mid-section or mid-measure
 - **Exclusive**: Only one playback active at a time
+- **Immutable**: No edits or reordering allowed during playback
 
 ## Architecture
 
@@ -170,15 +190,15 @@ npm run preview
 
 1. **UI Store** (Ephemeral - No Persistence)
 
-   - Playback state: `isPlaying`, `currentSongId`, `currentSectionIndex`
+   - Playback state: `isPlaying`, `currentSongId`, `currentSectionIndex`, `currentMeasureInSection`
    - Navigation: `currentPage`, `selectedSongId`
-   - Dialogs: `isCreateSongDialogOpen`, `deleteTarget`
-   - Actions: `startSongPlayback()`, `stopPlayback()`, `navigateTo()`
+   - Dialogs: `isCreateSongDialogOpen`, `isCreateSectionDialogOpen`, `isEditSectionDialogOpen`, `editSectionId`, `deleteTarget`
+   - Actions: `startSongPlayback()`, `stopPlayback()`, `navigateTo()`, `openEditSectionDialog()`, `setCurrentMeasure()`
 
 2. **App Store** (Persistent - localStorage)
    - Data: `songs[]` with nested `sections[]`
    - Preferences: `theme`, `metronomeVolume`, `metronomeSound`
-   - Actions: `createSong()`, `updateSong()`, `deleteSong()`, `createSection()`
+   - Actions: `createSong()`, `updateSong()`, `deleteSong()`, `createSection()`, `updateSection()`, `deleteSection()`, `reorderSections()`
    - Migrations: Version-based schema updates
 
 ### Audio Engine (Tone.js)
@@ -187,9 +207,11 @@ npm run preview
 
 - **Transport Scheduling**: Pre-schedules all sections upfront for seamless transitions
 - **BPM Handling**: Dynamic tempo changes between sections via `Tone.Transport.bpm.value`
-- **Accent Patterns**: First beat accented by default (velocity 1.0 vs 0.6)
-- **Sound Profiles**: Classic (Synth) vs Percussive (MembraneSynth)
+- **Accent Patterns**: First beat accented by default (velocity 1.0 vs 0.85)
+- **Measure Callbacks**: `onMeasureComplete` fired at start of each measure for real-time UI updates
+- **Sound Profiles**: Classic (Synth with sine oscillator) vs Percussive (MembraneSynth)
 - **Completion Callback**: Triggers `stopPlayback()` when all sections finish
+- **Section Transitions**: Automatic BPM changes and seamless measure counting across sections
 
 **Why Not Web Audio API Directly:**
 
@@ -211,14 +233,18 @@ src/
 │   ├── constants.ts       # LONG_PRESS_DURATION
 │   └── validation.ts      # Form validators
 ├── hooks/
-│   └── usePlaybackManager.ts  # React-Tone.js integration
+│   ├── usePlaybackManager.ts  # React-Tone.js integration
+│   └── useInlineEdit.ts       # Inline editing hook
 ├── components/
 │   ├── ui/                # shadcn components
 │   ├── ErrorBoundary.tsx  # Error catching
 │   ├── SongList.tsx       # Home page list
-│   ├── SectionList.tsx    # Song page list
+│   ├── SectionList.tsx    # Song page list with DnD
 │   ├── PlaybackControls.tsx
-│   └── *Dialog.tsx        # Modals
+│   ├── CreateSongDialog.tsx
+│   ├── CreateSectionDialog.tsx
+│   ├── EditSectionDialog.tsx  # Section editing
+│   └── DeleteConfirmDialog.tsx
 ├── pages/
 │   ├── HomePage.tsx
 │   ├── SongPage.tsx
@@ -228,6 +254,30 @@ src/
 ```
 
 ## Testing
+
+### Test Suite
+
+- **Vitest** - Fast unit test runner with 80 tests across 4 test files
+- **Test Coverage**:
+  - `useAppStore.test.ts` - 16 tests for songs and sections CRUD
+  - `useUIStore.test.ts` - 22 tests for playback, navigation, and dialogs (including edit section)
+  - `metronome.test.ts` - 26 tests for audio engine timing and callbacks
+  - `validation.test.ts` - 16 tests for form validation rules
+- **@testing-library/react** - React component testing utilities
+- **jsdom** - Browser environment simulation
+
+### Running Tests
+
+```bash
+# Run tests in watch mode
+npm test
+
+# Run tests once (CI mode)
+npm test -- --run
+
+# Run tests with UI
+npm run test:ui
+```
 
 ### Manual Testing Strategy
 
@@ -242,18 +292,38 @@ src/
 - Empty song list (empty state rendering)
 - Song with no sections (empty state rendering)
 - Rapid play/stop (race conditions)
+- Editing section during playback (buttons disabled)
+- Reordering sections during playback (drag handles disabled)
 - BPM extremes (35 BPM, 250 BPM)
 - Complex time signatures (7/8, 5/4, 6/8)
 - Section transitions with tempo changes
+- Measure counter accuracy across section boundaries
+- Long sections (999 measures)
 
-### MetronomeTest Component
+### Automated Test Examples
 
-Located in `src/components/MetronomeTest.tsx` - validates:
+Example test snippets:
 
-- BPM extremes
-- Various time signatures (4/4, 3/4, 6/8, 5/4, 7/8)
-- Section transitions
-- Accent patterns
+```typescript
+// UIStore: Edit section dialog state
+it('should open edit section dialog with section id', () => {
+  openEditSectionDialog('section-123');
+  expect(state.isEditSectionDialogOpen).toBe(true);
+  expect(state.editSectionId).toBe('section-123');
+});
+
+// AppStore: Update section properties
+it('should update a section by id', () => {
+  updateSection(songId, sectionId, { name: 'Chorus', bpm: 140 });
+  expect(section.name).toBe('Chorus');
+  expect(section.bpm).toBe(140);
+});
+
+// Metronome: Measure callback timing
+it('should trigger onMeasureComplete at correct intervals', () => {
+  // Verifies measure counter updates on accent beat
+});
+```
 
 ## Accessibility (WCAG AA)
 
@@ -267,7 +337,7 @@ Located in `src/components/MetronomeTest.tsx` - validates:
 
 ## PWA Features
 
-### Installation
+### PWA Installation
 
 - **iOS**: Add to Home Screen from Safari
 - **Android**: Install prompt automatically appears
@@ -318,14 +388,16 @@ Located in `src/components/MetronomeTest.tsx` - validates:
 
 - Export/import songs (JSON format)
 - Cloud sync across devices
-- Custom accent patterns per section
-- Visual metronome (flashing screen)
-- Count-in before playback (1-2 measures)
-- Click track export as audio file
-- Multiple sound packs (wood block, cowbell, etc.)
-- Practice mode (repeat section N times)
-- Tempo trainer (gradual BPM increase per loop)
-- Subdivision display (8th notes, 16th notes)
+- Custom accent patterns per section (UI for pattern editor)
+- Visual metronome (flashing screen on beats)
+- Count-in before playback (1-2 measures configurable)
+- Click track export as audio file (WAV/MP3)
+- Multiple sound packs (wood block, cowbell, rim shot, etc.)
+- Practice mode (repeat section N times before advancing)
+- Tempo trainer (gradual BPM increase per loop/section)
+- Subdivision display (8th notes, 16th notes, triplets)
+- Setlist mode (chain multiple songs together)
+- MIDI output for external devices
 
 ## Contributing
 

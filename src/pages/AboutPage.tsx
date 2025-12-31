@@ -1,4 +1,4 @@
-import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Github, Heart, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/mode-toggle';
 import { useUIStore } from '@/stores/useUIStore';
@@ -28,94 +28,161 @@ export function AboutPage() {
       </header>
 
       {/* Main Content */}
-      <main className="container px-4 py-6 max-w-2xl" role="main">
-        <div className="space-y-8">
+      <main className="container px-4 py-8 max-w-2xl" role="main">
+        <div className="space-y-10">
+          {/* Hero Section */}
+          <section className="text-center space-y-4">
+            <div className="flex justify-center">
+              <div className="relative">
+                <Music className="h-16 w-16 text-primary animate-pulse" />
+                <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full" />
+              </div>
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight">Time Loch</h1>
+            <p className="text-xl text-muted-foreground max-w-lg mx-auto">
+              An advanced metronome Progressive Web App (PWA) designed for
+              musicians working with complex song structures.
+            </p>
+            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <span>Version 1.0.0</span>
+              <span>•</span>
+              <span>December 2025</span>
+            </div>
+          </section>
+
           {/* Band Information */}
-          <section aria-labelledby="band-heading">
+          <section aria-labelledby="band-heading" className="space-y-4">
             <h2 id="band-heading" className="text-2xl font-bold">
               Devon Loch
             </h2>
-            <p className="text-muted-foreground">
-              Time Loch is a metronome application designed for Devon Loch, a
-              progressive rock band that creates complex musical compositions
-              with varying tempos and time signatures.
-            </p>
             <nav aria-label="Devon Loch links">
-              <div className="flex flex-col gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <a
                   href="https://devonloch.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded">
-                  Website
+                  className="flex items-center justify-center gap-2 px-4 py-2 border rounded-lg hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                   <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                  Website
                 </a>
                 <a
                   href="https://facebook.com/devonlochband"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded">
-                  Facebook
+                  className="flex items-center justify-center gap-2 px-4 py-2 border rounded-lg hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                   <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                  Facebook
                 </a>
                 <a
                   href="https://instagram.com/devonlochband"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded">
-                  Instagram
+                  className="flex items-center justify-center gap-2 px-4 py-2 border rounded-lg hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                   <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                  Instagram
                 </a>
               </div>
             </nav>
           </section>
 
-          {/* Application Information */}
-          <section aria-labelledby="app-heading">
-            <h2 id="app-heading" className="text-2xl font-bold">
-              Time Loch
+          {/* Key Features */}
+          <section aria-labelledby="features-heading" className="space-y-4">
+            <h2 id="features-heading" className="text-2xl font-bold">
+              What Makes It Special
             </h2>
-            <p className="text-muted-foreground">
-              Time Loch is a Progressive Web App (PWA) metronome designed
-              specifically for musicians who work with complex song structures.
-              It allows you to create songs with multiple sections, each with
-              its own tempo, time signature, and duration.
-            </p>
-            <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Features</h3>
-              <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                <li>Multiple sections per song with different tempos</li>
-                <li>
-                  Support for various time signatures (3/4, 4/4, 5/4, 6/8, 7/8,
-                  etc.)
-                </li>
-                <li>Sample-accurate audio timing using Tone.js</li>
-                <li>Progressive Web App - works offline</li>
-                <li>Dark/Light theme support</li>
-                <li>Mobile-first responsive design</li>
-              </ul>
+            <div className="grid gap-4">
+              <div className="border rounded-lg p-4 space-y-2 hover:border-primary transition-colors">
+                <h3 className="font-semibold">🎼 Section-Based Design</h3>
+                <p className="text-sm text-muted-foreground">
+                  Create songs with unlimited sections, each with its own BPM,
+                  time signature, and measure count. Perfect for prog rock,
+                  jazz, and complex arrangements.
+                </p>
+              </div>
+              <div className="border rounded-lg p-4 space-y-2 hover:border-primary transition-colors">
+                <h3 className="font-semibold">⚡ Sample-Accurate Timing</h3>
+                <p className="text-sm text-muted-foreground">
+                  Powered by Tone.js Web Audio API with Transport scheduling.
+                  Professional-grade accuracy that musicians can trust.
+                </p>
+              </div>
+              <div className="border rounded-lg p-4 space-y-2 hover:border-primary transition-colors">
+                <h3 className="font-semibold">📱 Rehearsal-Ready</h3>
+                <p className="text-sm text-muted-foreground">
+                  Mobile-first PWA that works offline. Real-time measure counter
+                  with bold text readable from your music stand. One-hand
+                  operation while playing.
+                </p>
+              </div>
+              <div className="border rounded-lg p-4 space-y-2 hover:border-primary transition-colors">
+                <h3 className="font-semibold">🎯 Deterministic Playback</h3>
+                <p className="text-sm text-muted-foreground">
+                  No loops, no resume, no surprises. It does exactly what you
+                  expect, every time. Drag to reorder sections, edit anytime.
+                </p>
+              </div>
             </div>
-            <p className="text-sm text-muted-foreground">Version 1.0.0</p>
           </section>
 
-          {/* Developer Attribution */}
-          <section aria-labelledby="developer-heading">
-            <h2 id="developer-heading" className="text-2xl font-bold">
-              Developer
+          {/* Tech Stack */}
+          <section
+            aria-labelledby="tech-heading"
+            className="space-y-3 bg-muted/50 rounded-lg p-6">
+            <h2 id="tech-heading" className="text-xl font-bold">
+              Built With
             </h2>
-            <p className="text-muted-foreground">
-              Developed with ❤️ for Devon Loch by Alessandro Annini
+            <div className="flex flex-wrap gap-2">
+              {[
+                'React 19',
+                'TypeScript',
+                'Zustand',
+                'Tone.js',
+                'Tailwind CSS',
+                'shadcn/ui',
+                'Vite',
+                'Vitest',
+              ].map((tech) => (
+                <span
+                  key={tech}
+                  className="px-3 py-1 bg-background border rounded-full text-sm font-medium">
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </section>
+
+          {/* Developer & Links */}
+          <section aria-labelledby="developer-heading" className="space-y-4">
+            <h2 id="developer-heading" className="text-2xl font-bold">
+              Open Source
+            </h2>
+            <p className="text-muted-foreground flex items-center gap-2">
+              <Heart className="h-4 w-4 text-red-500 fill-red-500" />
+              Crafted with passion by{' '}
+              <span className="font-semibold text-foreground">
+                Alessandro Annini
+              </span>
             </p>
-            <a
-              href="https://www.linkedin.com/in/alessandroannini/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded">
-              LinkedIn Profile
-              <ExternalLink className="h-4 w-4" aria-hidden="true" />
-            </a>
-            <p className="text-sm text-muted-foreground mt-2">
-              Built with React, TypeScript, Zustand, Tone.js, and Tailwind CSS
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <a
+                href="https://github.com/AlessandroAnnini/time-loch"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 px-4 py-3 bg-foreground text-background rounded-lg hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 font-medium">
+                <Github className="h-5 w-5" aria-hidden="true" />
+                View on GitHub
+              </a>
+              <a
+                href="https://www.linkedin.com/in/alessandroannini/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 px-4 py-3 border rounded-lg hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 font-medium">
+                <ExternalLink className="h-5 w-5" aria-hidden="true" />
+                LinkedIn Profile
+              </a>
+            </div>
+            <p className="text-sm text-muted-foreground text-center pt-4">
+              MIT License • Free and open source forever
             </p>
           </section>
         </div>
