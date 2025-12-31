@@ -1,4 +1,4 @@
-import { Music, Play, Trash2, GripVertical } from 'lucide-react';
+import { Music, Play, Trash2, GripVertical, Edit2 } from 'lucide-react';
 import { useAppStore } from '@/stores/useAppStore';
 import { useUIStore } from '@/stores/useUIStore';
 import { Button } from '@/components/ui/button';
@@ -34,6 +34,7 @@ interface SortableSectionItemProps {
   isCurrentlyPlaying: boolean;
   currentMeasure: number;
   onPlay: (e: React.MouseEvent, index: number) => void;
+  onEdit: (e: React.MouseEvent, sectionId: string) => void;
   onDelete: (e: React.MouseEvent, sectionId: string) => void;
 }
 
@@ -44,6 +45,7 @@ function SortableSectionItem({
   isCurrentlyPlaying,
   currentMeasure,
   onPlay,
+  onEdit,
   onDelete,
 }: SortableSectionItemProps) {
   const {
@@ -109,6 +111,16 @@ function SortableSectionItem({
       <Button
         variant="ghost"
         size="icon"
+        className="h-8 w-8 text-muted-foreground hover:text-foreground shrink-0"
+        onClick={(e) => onEdit(e, section.id)}
+        disabled={isPlaying}
+        aria-label="Edit section">
+        <Edit2 className="h-4 w-4" />
+      </Button>
+
+      <Button
+        variant="ghost"
+        size="icon"
         className="h-8 w-8 text-muted-foreground hover:text-destructive shrink-0"
         onClick={(e) => onDelete(e, section.id)}
         disabled={isPlaying}
@@ -133,6 +145,9 @@ export function SectionList({ songId }: SectionListProps) {
     (state) => state.currentMeasureInSection
   );
   const openDeleteDialog = useUIStore((state) => state.openDeleteDialog);
+  const openEditSectionDialog = useUIStore(
+    (state) => state.openEditSectionDialog
+  );
   const startSectionPlayback = useUIStore(
     (state) => state.startSectionPlayback
   );
@@ -168,6 +183,11 @@ export function SectionList({ songId }: SectionListProps) {
     if (!isPlaying) {
       startSectionPlayback(songId, sectionIndex);
     }
+  };
+
+  const handleEdit = (e: React.MouseEvent, sectionId: string) => {
+    e.stopPropagation();
+    openEditSectionDialog(sectionId);
   };
 
   const handleDelete = (e: React.MouseEvent, sectionId: string) => {
@@ -209,6 +229,7 @@ export function SectionList({ songId }: SectionListProps) {
               }
               currentMeasure={currentMeasureInSection}
               onPlay={handlePlay}
+              onEdit={handleEdit}
               onDelete={handleDelete}
             />
           ))}

@@ -15,6 +15,8 @@ interface UIState {
   // Dialogs/Modals
   isCreateSongDialogOpen: boolean;
   isCreateSectionDialogOpen: boolean;
+  isEditSectionDialogOpen: boolean;
+  editSectionId: string | null;
   isDeleteConfirmOpen: boolean;
   deleteTarget: DeleteTarget | null;
 
@@ -35,6 +37,8 @@ interface UIState {
   closeCreateSongDialog: () => void;
   openCreateSectionDialog: () => void;
   closeCreateSectionDialog: () => void;
+  openEditSectionDialog: (sectionId: string) => void;
+  closeEditSectionDialog: () => void;
   openDeleteConfirm: (target: DeleteTarget) => void;
   closeDeleteConfirm: () => void;
   openDeleteDialog: (
@@ -54,6 +58,8 @@ export const useUIStore = create<UIState>()((set) => ({
   selectedSongId: null,
   isCreateSongDialogOpen: false,
   isCreateSectionDialogOpen: false,
+  isEditSectionDialogOpen: false,
+  editSectionId: null,
   isDeleteConfirmOpen: false,
   deleteTarget: null,
 
@@ -127,6 +133,14 @@ export const useUIStore = create<UIState>()((set) => ({
 
   closeCreateSectionDialog: () => {
     set({ isCreateSectionDialogOpen: false });
+  },
+
+  openEditSectionDialog: (sectionId) => {
+    set({ isEditSectionDialogOpen: true, editSectionId: sectionId });
+  },
+
+  closeEditSectionDialog: () => {
+    set({ isEditSectionDialogOpen: false, editSectionId: null });
   },
 
   openDeleteConfirm: (target) => {

@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { SectionList } from '@/components/SectionList';
 import { PlaybackControls } from '@/components/PlaybackControls';
 import { CreateSectionDialog } from '@/components/CreateSectionDialog';
+import { EditSectionDialog } from '@/components/EditSectionDialog';
 import { DeleteConfirmDialog } from '@/components/DeleteConfirmDialog';
 import { ModeToggle } from '@/components/mode-toggle';
 import { useAppStore } from '@/stores/useAppStore';
@@ -205,6 +206,7 @@ export function SongPage() {
 
       {/* Dialogs */}
       <CreateSectionDialog />
+      <EditSectionDialog />
       <DeleteConfirmDialog />
     </div>
   );
