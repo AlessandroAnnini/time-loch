@@ -1,0 +1,13 @@
+---
+description: Markdown documentation rules
+globs: *.md
+alwaysApply: false
+---
+
+# Documentation
+
+## Diagrams (Mermaid)
+
+- Use Mermaid for diagrams
+- Please remember to wrap node labels in double quotes when they contain special characters such as parentheses (), asterisks (\*), ampersands (&), or any other punctuation marks that could be interpreted as mermaid syntax. For example, use `A["Main Application"]` instead of `A[Main Application]`
+- Use simple, clean diagrams (no custom colors or styles)

@@ -1,0 +1,100 @@
+---
+description: General development rules
+alwaysApply: true
+---
+
+# Coding Assistant Rules
+
+## 1. Implementation Strategy
+
+### Progressive Development
+
+- Implement solutions in logical stages, not all at once
+- Pause after each meaningful component to verify requirements
+- Confirm scope understanding before beginning
+
+### Scope Management
+
+- Implement only what is explicitly requested (minimal viable interpretation)
+- For ambiguous requirements, choose the simplest approach
+- Ask permission before modifying unmentioned components
+- Classify changes by impact: Small (minor), Medium (moderate), Large (restructuring)
+- For Large changes, outline plan before proceeding
+
+### Communication Protocol
+
+- Summarize completed work after each component
+- Note which features are complete vs. remaining
+- Include usage examples and identify edge cases
+- Suggest relevant tests for verification
+
+## 2. Code Quality Standards
+
+### Core Principles
+
+- **Composition over Inheritance**: Always prefer composition over inheritance
+- **KISS**: Write the simplest solution that works
+- **DRY**: Don't repeat logic
+- **Modularity**: Favor pure functions, avoid unnecessary OOP wrappers
+- **Code**: Write readable and maintainable code
+
+### Implementation Guidelines
+
+- Use meaningful names, keep functions short and single-purpose
+- Include error handling and early returns
+- Use strict typing and type annotations
+- Cyclomatic complexity < 12 per function
+- Refactor if code takes > 5 minutes to understand
+- Immediately delete unused variables, functions, imports, files
+
+### Planning & Testing
+
+- Reason about the task, create an executable step-by-step plan
+- For medium/high impact changes, create temporary test scripts
+- Validate changes don't break existing functionality
+
+## 3. Refactoring Approach
+
+### DO
+
+- Refactor code directly and thoroughly
+- Update ALL dependent code
+- Make changes progressively across entire codebase
+- Maintain all existing functionality
+
+### DON'T
+
+- Create adapters/wrappers for backward compatibility
+- Leave legacy patterns in place
+- Add unnecessary abstraction layers
+- Remove features during refactoring
+
+## 4. Layered Architecture (When Applicable)
+
+### Layer 1: Infrastructure
+
+- Low-level operations (filesystem, network, OS, APIs)
+- Database drivers, clients, raw SQL functions
+- No domain logic
+
+### Layer 2: Data Access/Repository
+
+- Clean abstraction over persistence
+- Map raw records to domain models
+- No business logic
+- ORM/query builders used here but behind interfaces
+
+### Layer 3: Business Logic/Services
+
+- Implements use cases and business rules
+- Depends on repository interfaces only
+- Contains validation, decisions, orchestration
+
+**Boundaries**: Never cross layers - business logic shouldn't contain SQL, infrastructure shouldn't call services
+
+## 5. Balancing Control
+
+- **Simple tasks**: Implement complete solution
+- **Complex tasks**: Break into logical chunks with review points
+- **Uncertain scope**: Pause and ask clarifying questions
+- Adapt to user preference for granularity

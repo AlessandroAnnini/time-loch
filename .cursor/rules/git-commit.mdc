@@ -1,0 +1,112 @@
+---
+description: Git commit message rules
+alwaysApply: false
+---
+
+# Version Control (Conventional Commits)
+
+## When to Use This Rule
+
+- Apply when the user asks to:
+
+  - Create a git commit message
+  - Summarize changes for a commit
+  - Prepare multiple commit messages from a diff
+
+- Always **review the git diff** (or the user’s description of changes) before proposing a message.
+
+## Commit Strategy
+
+- Prefer **one logical change per commit**:
+
+  - One bug fix
+  - One feature slice
+  - One focused refactor / config change
+
+- If changes naturally split, **propose multiple commits** instead of one large commit.
+- Ensure the commit message matches the **dominant intent** of the diff (feat, fix, refactor, etc.).
+- Optimize messages for **changelog generation and code review** clarity.
+
+## Commit Format
+
+Custom Conventional Commit format with emoji:
+
+```text
+<type><emoji>: <description>
+
+[optional body explaining what and why]
+[optional footer with references or breaking changes]
+```
+
+### Allowed Types & Emojis
+
+- `feat✨`: new feature or behavior
+- `fix🐛`: bug fix
+- `docs📝`: documentation only
+- `style💄`: formatting, whitespace, no logic change
+- `refactor♻️`: code restructuring, no behavior change
+- `perf⚡`: performance improvement
+- `test✅`: tests added or updated
+- `chore🔧`: maintenance, tooling, configs
+- `ci👷`: CI/CD configuration changes
+- `build📦`: build system or dependencies
+- `revert⏪`: revert previous commit
+
+Optional scope:
+
+```text
+<type><emoji>(<scope>): <description>
+```
+
+Example: `feat✨(auth): add JWT login endpoint`
+
+## Subject Line Rules (First Line)
+
+When generating `<type><emoji>: <description>`:
+
+- Use **imperative, present tense** (e.g., `add`, `update`, `remove`).
+- Keep the **description short** (≤50 characters preferred, ≤72 total line length).
+- Avoid punctuation at the end of the line.
+- Avoid vague words like `stuff`, `updates`, `changes`, `fix bug`, `minor tweaks`.
+- Make it clear what the commit _does_ at a glance.
+
+## Commit Body (Optional but Recommended)
+
+Add a body for non-trivial, impactful, or contextual changes.
+
+Formatting:
+
+```text
+<type><emoji>: <short description>
+
+Explain what changed in more detail.
+Explain why it changed or what problem it solves.
+Mention implications, tradeoffs or side effects.
+```
+
+Guidelines:
+
+- Separate subject and body with **one blank line**.
+- Wrap lines at around **72 characters**.
+- Focus on **what** changed and **why**.
+- Reference work items when available:
+
+  - `Refs: JIRA-123`
+  - `Closes: #456`
+
+- For breaking changes, add a footer:
+
+  - `BREAKING CHANGE: <impact explanation>`
+
+## AI Response Rules
+
+- Read the diff or user-provided change description.
+- Determine if **one or multiple commits** are more appropriate.
+- For each commit:
+
+  1. Choose the most suitable **type**.
+  2. Optionally specify a **scope**.
+  3. Write a **concise, imperative subject line** using `<type><emoji>: <description>`.
+  4. Add a **body** if useful to clarify context or motivation.
+
+- **Output only the commit message(s)** unless the user explicitly asks for reasoning or alternatives.

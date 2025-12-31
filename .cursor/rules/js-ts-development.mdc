@@ -1,0 +1,13 @@
+---
+description: JavaScript and TypeScript development rules
+globs: '*.js,*.ts,*.tsx,*.jsx'
+alwaysApply: true
+---
+
+# Core Principles
+
+- **Functional Programming**: Always use FP style (no classes unless explicitly requested)
+- Always prefer composition over inheritance
+- Always use DRY and KISS principles
+- Concentrate types in "src/types.ts"
+- Document all code with JSDoc
