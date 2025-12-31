@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { Music, Play } from 'lucide-react';
 import { useAppStore } from '@/stores/useAppStore';
 import { useUIStore } from '@/stores/useUIStore';
+import { LONG_PRESS_DURATION } from '@/lib/constants';
 
 interface SectionListProps {
   songId: string;
@@ -26,7 +27,7 @@ export function SectionList({ songId }: SectionListProps) {
     longPressTimer.current = window.setTimeout(() => {
       isLongPress.current = true;
       openDeleteDialog('section', sectionId, songId);
-    }, 500);
+    }, LONG_PRESS_DURATION);
   };
 
   const handleTouchEnd = (sectionIndex: number) => {

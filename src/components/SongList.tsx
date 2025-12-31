@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { useAppStore, useUIStore } from '@/stores';
 import { Music } from 'lucide-react';
+import { LONG_PRESS_DURATION } from '@/lib/constants';
 
 export function SongList() {
   const songs = useAppStore((state) => state.songs);
@@ -17,7 +18,7 @@ export function SongList() {
     longPressTimer.current = setTimeout(() => {
       setLongPressId(songId);
       openDeleteConfirm({ type: 'song', id: songId });
-    }, 500);
+    }, LONG_PRESS_DURATION);
   };
 
   const handleTouchEnd = (songId: string) => {

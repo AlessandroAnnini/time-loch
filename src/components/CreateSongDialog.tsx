@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useAppStore, useUIStore } from '@/stores';
+import { validateRequired } from '@/lib/validation';
 
 export function CreateSongDialog() {
   const isOpen = useUIStore((state) => state.isCreateSongDialogOpen);
@@ -22,21 +23,17 @@ export function CreateSongDialog() {
   const [title, setTitle] = useState('');
   const [notes, setNotes] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title.trim()) return;
+    if (!validateRequired(title, 'Song title')) {
+      return;
+    }
 
-    createSong({
-      title: title.trim(),
-      notes: notes.trim(),
-      sections: [],
-    });
-
+    createSong({ title: title.trim(), notes: notes.trim(), sections: [] });
     toast.success('Song created', {
-      description: `\"${title.trim()}\" has been added to your songs.`,
+      description: `"${title.trim()}" has been added to your songs.`,
     });
-
     setTitle('');
     setNotes('');
     closeDialog();

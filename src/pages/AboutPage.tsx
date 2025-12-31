@@ -7,16 +7,17 @@ export function AboutPage() {
   const navigateTo = useUIStore((state) => state.navigateTo);
 
   return (
-        <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60" role="banner">
+      <header
+        className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60"
+        role="banner">
         <div className="container flex h-14 items-center px-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigateTo('home')}
-            aria-label="Back to songs list"
-          >
+            aria-label="Back to songs list">
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <h1 className="text-xl font-bold ml-2">About</h1>
@@ -31,10 +32,12 @@ export function AboutPage() {
         <div className="space-y-8">
           {/* Band Information */}
           <section aria-labelledby="band-heading">
-            <h2 id="band-heading" className="text-2xl font-bold">Devon Loch</h2>
-                        <p className="text-muted-foreground">
-              Time Loch is a metronome application designed for Devon Loch,
-              a progressive rock band that creates complex musical compositions
+            <h2 id="band-heading" className="text-2xl font-bold">
+              Devon Loch
+            </h2>
+            <p className="text-muted-foreground">
+              Time Loch is a metronome application designed for Devon Loch, a
+              progressive rock band that creates complex musical compositions
               with varying tempos and time signatures.
             </p>
             <nav aria-label="Devon Loch links">
@@ -43,8 +46,7 @@ export function AboutPage() {
                   href="https://devonloch.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded"
-                >
+                  className="flex items-center gap-2 text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded">
                   Website
                   <ExternalLink className="h-4 w-4" aria-hidden="true" />
                 </a>
@@ -52,8 +54,7 @@ export function AboutPage() {
                   href="https://facebook.com/devonlochband"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded"
-                >
+                  className="flex items-center gap-2 text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded">
                   Facebook
                   <ExternalLink className="h-4 w-4" aria-hidden="true" />
                 </a>
@@ -61,8 +62,7 @@ export function AboutPage() {
                   href="https://instagram.com/devonlochband"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded"
-                >
+                  className="flex items-center gap-2 text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded">
                   Instagram
                   <ExternalLink className="h-4 w-4" aria-hidden="true" />
                 </a>
@@ -72,7 +72,9 @@ export function AboutPage() {
 
           {/* Application Information */}
           <section aria-labelledby="app-heading">
-            <h2 id="app-heading" className="text-2xl font-bold">Time Loch</h2>
+            <h2 id="app-heading" className="text-2xl font-bold">
+              Time Loch
+            </h2>
             <p className="text-muted-foreground">
               Time Loch is a Progressive Web App (PWA) metronome designed
               specifically for musicians who work with complex song structures.
@@ -98,11 +100,21 @@ export function AboutPage() {
 
           {/* Developer Attribution */}
           <section aria-labelledby="developer-heading">
-            <h2 id="developer-heading" className="text-2xl font-bold">Developer</h2>
+            <h2 id="developer-heading" className="text-2xl font-bold">
+              Developer
+            </h2>
             <p className="text-muted-foreground">
-              Developed with ❤️ for Devon Loch
+              Developed with ❤️ for Devon Loch by Alessandro Annini
             </p>
-            <p className="text-sm text-muted-foreground">
+            <a
+              href="https://www.linkedin.com/in/alessandroannini/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded">
+              LinkedIn Profile
+              <ExternalLink className="h-4 w-4" aria-hidden="true" />
+            </a>
+            <p className="text-sm text-muted-foreground mt-2">
               Built with React, TypeScript, Zustand, Tone.js, and Tailwind CSS
             </p>
           </section>

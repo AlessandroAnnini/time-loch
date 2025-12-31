@@ -16,7 +16,7 @@ export function DeleteConfirmDialog() {
   const closeDialog = useUIStore((state) => state.closeDeleteConfirm);
   const currentPage = useUIStore((state) => state.currentPage);
   const navigateTo = useUIStore((state) => state.navigateTo);
-  
+
   const songs = useAppStore((state) => state.songs);
   const deleteSong = useAppStore((state) => state.deleteSong);
   const deleteSection = useAppStore((state) => state.deleteSection);

@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAppStore, useUIStore } from '@/stores';
+import { validateRequired, validateBPM, validateMeasures } from '@/lib/validation';
 
 export function CreateSectionDialog() {
   const isOpen = useUIStore((state) => state.isCreateSectionDialogOpen);
@@ -27,14 +28,31 @@ export function CreateSectionDialog() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const bpmNum = Number(bpm);
-    if (!selectedSongId || !name.trim() || bpmNum < 35 || bpmNum > 250) return;
-    
+
+    if (!validateRequired(name, 'Section name')) {
+      return;
+    }
+
+    const bpmValue = Number(bpm);
+    if (!validateBPM(bpmValue)) {
+      return;
+    }
+
+    const measuresValue = Number(measures);
+    if (!validateMeasures(measuresValue)) {
+      return;
+    }
+
+    if (!selectedSongId) {
+      toast.error('Error', { description: 'No song selected.' });
+      return;
+    }
+
     createSection(selectedSongId, {
       name: name.trim(),
-      bpm: bpmNum,
+      bpm: bpmValue,
       timeSignature: { beats: Number(beats), noteValue: Number(noteValue) },
-      measures: Number(measures),
+      measures: measuresValue,
     });
     toast.success('Section added', {
       description: `"${name.trim()}" has been added to the song.`,
