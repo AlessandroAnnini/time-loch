@@ -12,7 +12,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAppStore, useUIStore } from '@/stores';
-import { validateRequired, validateBPM, validateMeasures } from '@/lib/validation';
+import {
+  validateRequired,
+  validateBPM,
+  validateMeasures,
+} from '@/lib/validation';
 
 export function CreateSectionDialog() {
   const isOpen = useUIStore((state) => state.isCreateSectionDialogOpen);
