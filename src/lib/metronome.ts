@@ -83,8 +83,6 @@ export class MetronomeEngine {
 
     // Calculate beat duration in seconds
     const beatDuration = 60 / bpm;
-    const measureDuration = beatDuration * beats;
-    const sectionDuration = measureDuration * measures;
 
     // Set transport BPM
     Tone.Transport.bpm.value = bpm;
@@ -110,7 +108,9 @@ export class MetronomeEngine {
       }
     }
 
-    return startTime + sectionDuration;
+    // Return the time AFTER the section completes
+    // This ensures the next section starts after the last beat finishes
+    return currentTime;
   }
 
   public async playSections(
