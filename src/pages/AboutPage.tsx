@@ -69,7 +69,6 @@ export function AboutPage() {
               </div>
             </nav>
           </section>
-          </section>
 
           {/* Application Information */}
           <section aria-labelledby="app-heading">

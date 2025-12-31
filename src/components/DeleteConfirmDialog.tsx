@@ -14,9 +14,12 @@ export function DeleteConfirmDialog() {
   const isOpen = useUIStore((state) => state.isDeleteConfirmOpen);
   const deleteTarget = useUIStore((state) => state.deleteTarget);
   const closeDialog = useUIStore((state) => state.closeDeleteConfirm);
+  const currentPage = useUIStore((state) => state.currentPage);
+  const navigateTo = useUIStore((state) => state.navigateTo);
+  
+  const songs = useAppStore((state) => state.songs);
   const deleteSong = useAppStore((state) => state.deleteSong);
   const deleteSection = useAppStore((state) => state.deleteSection);
-  const getSong = useAppStore((state) => state.getSong);
 
   const handleConfirm = () => {
     if (!deleteTarget) return;
@@ -44,19 +47,19 @@ export function DeleteConfirmDialog() {
       });
     }
 
-    closeDeleteConfirm();
+    closeDialog();
   };
 
   const getItemName = () => {
     if (!deleteTarget) return '';
 
     if (deleteTarget.type === 'song') {
-      const song = getSong(deleteTarget.id);
+      const song = songs.find((s) => s.id === deleteTarget.id);
       return song ? `"${song.title}"` : 'this song';
     }
 
     if (deleteTarget.type === 'section' && deleteTarget.songId) {
-      const song = getSong(deleteTarget.songId);
+      const song = songs.find((s) => s.id === deleteTarget.songId);
       const section = song?.sections.find((s) => s.id === deleteTarget.id);
       return section ? `"${section.name}"` : 'this section';
     }
@@ -79,7 +82,7 @@ export function DeleteConfirmDialog() {
           <Button type="button" variant="outline" onClick={closeDialog}>
             Cancel
           </Button>
-          <Button type="button" variant="destructive" onClick={handleDelete}>
+          <Button type="button" variant="destructive" onClick={handleConfirm}>
             Delete
           </Button>
         </DialogFooter>

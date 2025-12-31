@@ -27,25 +27,21 @@ export function CreateSectionDialog() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim() && validateBpm()) {
-      createSection(
-        selectedSongId,
-        name.trim(),
-        Number(bpm),
-        { beats: Number(numerator), noteValue: Number(denominator) },
-        Number(measures)
-      );
-      toast.success('Section added', {
-        description: `"${name.trim()}" has been added to the song.`,
-      });
-      // Reset form
-      setName('');
-      setBpm('120');
-      setNumerator('4');
-      setDenominator('4');
-      setMeasures('4');
-      closeCreateSectionDialog();
-    }
+    const bpmNum = Number(bpm);
+    if (!selectedSongId || !name.trim() || bpmNum < 35 || bpmNum > 250) return;
+    
+    createSection(selectedSongId, {
+      name: name.trim(),
+      bpm: bpmNum,
+      timeSignature: { beats: Number(beats), noteValue: Number(noteValue) },
+      measures: Number(measures),
+    });
+    toast.success('Section added', {
+      description: `"${name.trim()}" has been added to the song.`,
+    });
+    // Reset form
+    resetForm();
+    closeDialog();
   };
 
   const resetForm = () => {

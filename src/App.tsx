@@ -13,7 +13,7 @@ function App() {
   usePlaybackManager();
 
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider>
       {currentPage === 'home' && <HomePage />}
       {currentPage === 'song' && <SongPage />}
       {currentPage === 'about' && <AboutPage />}
