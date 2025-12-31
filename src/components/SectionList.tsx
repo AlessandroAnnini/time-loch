@@ -1,17 +1,13 @@
-import { useRef } from 'react';
-import { Music, Play } from 'lucide-react';
+import { Music, Play, Trash2 } from 'lucide-react';
 import { useAppStore } from '@/stores/useAppStore';
 import { useUIStore } from '@/stores/useUIStore';
-import { LONG_PRESS_DURATION } from '@/lib/constants';
+import { Button } from '@/components/ui/button';
 
 interface SectionListProps {
   songId: string;
 }
 
 export function SectionList({ songId }: SectionListProps) {
-  const longPressTimer = useRef<number | null>(null);
-  const isLongPress = useRef(false);
-
   const songs = useAppStore((state) => state.songs);
   const isPlaying = useUIStore((state) => state.isPlaying);
   const openDeleteDialog = useUIStore((state) => state.openDeleteDialog);
@@ -22,39 +18,16 @@ export function SectionList({ songId }: SectionListProps) {
   const song = songs.find((s) => s.id === songId);
   const sections = song?.sections || [];
 
-  const handleTouchStart = (sectionId: string) => {
-    isLongPress.current = false;
-    longPressTimer.current = window.setTimeout(() => {
-      isLongPress.current = true;
-      openDeleteDialog('section', sectionId, songId);
-    }, LONG_PRESS_DURATION);
-  };
-
-  const handleTouchEnd = (sectionIndex: number) => {
-    if (longPressTimer.current) {
-      window.clearTimeout(longPressTimer.current);
-      longPressTimer.current = null;
-    }
-    // Ignore tap if it was a long press or during playback
-    if (!isLongPress.current && !isPlaying) {
-      // Play from this section to end of song
-      startSectionPlayback(songId, sectionIndex);
-    }
-  };
-
-  const handleTouchCancel = () => {
-    if (longPressTimer.current) {
-      window.clearTimeout(longPressTimer.current);
-      longPressTimer.current = null;
-    }
-    isLongPress.current = false;
-  };
-
   const handlePlay = (e: React.MouseEvent, sectionIndex: number) => {
     e.stopPropagation();
     if (!isPlaying) {
       startSectionPlayback(songId, sectionIndex);
     }
+  };
+
+  const handleDelete = (e: React.MouseEvent, sectionId: string) => {
+    e.stopPropagation();
+    openDeleteDialog('section', sectionId, songId);
   };
 
   if (sections.length === 0) {
@@ -73,16 +46,13 @@ export function SectionList({ songId }: SectionListProps) {
       {sections.map((section, index) => (
         <div
           key={section.id}
-          className={`flex items-center gap-3 p-4 bg-card border rounded-lg select-none ${
-            isPlaying ? 'opacity-50' : 'active:bg-accent'
-          }`}
-          onTouchStart={() => handleTouchStart(section.id)}
-          onTouchEnd={() => handleTouchEnd(index)}
-          onTouchCancel={handleTouchCancel}>
+          className={`flex items-center gap-3 p-4 bg-card border rounded-lg ${
+            isPlaying ? 'opacity-50' : ''
+          }`}>
           <button
             onClick={(e) => handlePlay(e, index)}
             disabled={isPlaying}
-            className="flex items-center justify-center h-10 w-10 rounded-full bg-primary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+            className="flex items-center justify-center h-10 w-10 rounded-full bg-primary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed shrink-0 hover:bg-primary/90 transition-colors"
             aria-label={`Play ${section.name}`}>
             <Play className="h-5 w-5 fill-current" />
           </button>
@@ -95,6 +65,16 @@ export function SectionList({ songId }: SectionListProps) {
               {section.measures === 1 ? 'measure' : 'measures'}
             </div>
           </div>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground hover:text-destructive shrink-0"
+            onClick={(e) => handleDelete(e, section.id)}
+            disabled={isPlaying}
+            aria-label="Delete section">
+            <Trash2 className="h-4 w-4" />
+          </Button>
         </div>
       ))}
     </div>

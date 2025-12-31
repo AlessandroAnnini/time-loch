@@ -1,7 +1,6 @@
-import { useRef, useState } from 'react';
 import { useAppStore, useUIStore } from '@/stores';
-import { Music } from 'lucide-react';
-import { LONG_PRESS_DURATION } from '@/lib/constants';
+import { Music, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export function SongList() {
   const songs = useAppStore((state) => state.songs);
@@ -9,40 +8,9 @@ export function SongList() {
   const openDeleteConfirm = useUIStore((state) => state.openDeleteConfirm);
   const isPlaying = useUIStore((state) => state.isPlaying);
 
-  const [longPressId, setLongPressId] = useState<string | null>(null);
-  const longPressTimer = useRef<number | null>(null);
-
-  const handleTouchStart = (songId: string) => {
-    if (isPlaying) return;
-
-    longPressTimer.current = setTimeout(() => {
-      setLongPressId(songId);
-      openDeleteConfirm({ type: 'song', id: songId });
-    }, LONG_PRESS_DURATION);
-  };
-
-  const handleTouchEnd = (songId: string) => {
-    if (longPressTimer.current) {
-      clearTimeout(longPressTimer.current);
-      longPressTimer.current = null;
-    }
-
-    if (longPressId === songId) {
-      setLongPressId(null);
-      return;
-    }
-
-    if (!isPlaying) {
-      navigateTo('song', songId);
-    }
-  };
-
-  const handleTouchCancel = () => {
-    if (longPressTimer.current) {
-      clearTimeout(longPressTimer.current);
-      longPressTimer.current = null;
-    }
-    setLongPressId(null);
+  const handleDelete = (e: React.MouseEvent, songId: string) => {
+    e.stopPropagation();
+    openDeleteConfirm({ type: 'song', id: songId });
   };
 
   if (songs.length === 0) {
@@ -70,11 +38,7 @@ export function SongList() {
                 ? 'opacity-50 cursor-not-allowed'
                 : 'cursor-pointer hover:bg-accent'
             }
-            ${longPressId === song.id ? 'scale-95' : ''}
           `}
-          onTouchStart={() => handleTouchStart(song.id)}
-          onTouchEnd={() => handleTouchEnd(song.id)}
-          onTouchCancel={handleTouchCancel}
           onClick={() => !isPlaying && navigateTo('song', song.id)}>
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
@@ -86,7 +50,18 @@ export function SongList() {
                 )}
               </div>
             </div>
-            <Music className="h-5 w-5 text-muted-foreground shrink-0" />
+            <div className="flex items-center gap-2 shrink-0">
+              <Music className="h-5 w-5 text-muted-foreground" />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                onClick={(e) => handleDelete(e, song.id)}
+                disabled={isPlaying}
+                aria-label="Delete song">
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       ))}

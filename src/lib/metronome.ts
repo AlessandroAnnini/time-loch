@@ -59,7 +59,9 @@ export class MetronomeEngine {
 
     const velocity = isAccent ? 1.0 : 0.6;
     this.log(
-      `Click at ${time.toFixed(3)}s - Beat ${this.currentBeat + 1} - ${isAccent ? 'ACCENT' : 'normal'}`
+      `Click at ${time.toFixed(3)}s - Beat ${this.currentBeat + 1} - ${
+        isAccent ? 'ACCENT' : 'normal'
+      }`
     );
 
     if (this.currentSound === 'percussive') {
@@ -87,10 +89,7 @@ export class MetronomeEngine {
     return beat === 0;
   }
 
-  private scheduleSection(
-    section: Section,
-    startTime: number
-  ): number {
+  private scheduleSection(section: Section, startTime: number): number {
     const { bpm, timeSignature, measures, accentPattern } = section;
     const { beats } = timeSignature;
 
@@ -108,7 +107,7 @@ export class MetronomeEngine {
     this.currentBeat = 0;
     this.currentMeasure = 0;
 
-    // Schedule all beats in this section using absolute time (seconds)
+    // Schedule all beats in this section using Transport time
     let currentTime = startTime;
     for (let measure = 0; measure < measures; measure++) {
       for (let beat = 0; beat < beats; beat++) {
@@ -139,7 +138,7 @@ export class MetronomeEngine {
   ): Promise<void> {
     this.log('=== playSections called ===');
     this.log('Sections to play:', sections.length - startIndex);
-    this.log('Start time:', Tone.now());
+    this.log('AudioContext time (now):', Tone.now());
 
     await this.initializeAudio();
     this.stop();
@@ -151,14 +150,19 @@ export class MetronomeEngine {
     this.synth = this.createSynth(sound);
     this.synth.volume.value = Tone.gainToDb(volume);
 
-    // Schedule all sections from startIndex
-    let currentTime = Tone.now() + 0.1; // Small delay to ensure audio is ready
-    this.log('Initial schedule time:', currentTime.toFixed(3));
+    // CRITICAL: Schedule events in TRANSPORT TIME (starting from 0)
+    // NOT AudioContext time. Transport.schedule() expects Transport timeline positions.
+    // Transport.start() will be called at current AudioContext time, but events are
+    // scheduled relative to Transport position 0.
+    let currentTime = 0.1; // Small delay in Transport time
+    this.log('Transport schedule start time:', currentTime.toFixed(3));
 
     for (let i = startIndex; i < sections.length; i++) {
       const section = sections[i];
       this.log(
-        `Scheduling section ${i + 1}: ${section.name} - ${section.bpm}BPM - ${section.timeSignature.beats}/${section.timeSignature.noteValue} - ${section.measures} measures`
+        `Scheduling section ${i + 1}: ${section.name} - ${section.bpm}BPM - ${
+          section.timeSignature.beats
+        }/${section.timeSignature.noteValue} - ${section.measures} measures`
       );
       const nextTime = this.scheduleSection(section, currentTime);
       this.log(`Section ends at: ${nextTime.toFixed(3)}s`);
@@ -177,8 +181,10 @@ export class MetronomeEngine {
       }, currentTime);
     }
 
-    // Start transport
-    this.log('Starting Transport at position:', Tone.Transport.position);
+    // Start transport at current AudioContext time
+    // Events scheduled above use Transport time (relative to position 0)
+    this.log('Starting Transport at position: ' + Tone.Transport.position);
+    this.log('Starting Transport at AudioContext time:', Tone.now().toFixed(3));
     Tone.Transport.start();
     this.log('Transport state:', Tone.Transport.state);
   }
@@ -190,7 +196,7 @@ export class MetronomeEngine {
 
     // CRITICAL: Stop and reset in correct order
     Tone.Transport.cancel(); // Cancel all scheduled events first
-    Tone.Transport.stop();   // Stop the transport
+    Tone.Transport.stop(); // Stop the transport
     Tone.Transport.position = 0; // Reset position to beginning
 
     this.log('Transport state after stop:', Tone.Transport.state);

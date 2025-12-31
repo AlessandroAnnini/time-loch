@@ -1,6 +1,7 @@
 /**
  * Application-wide constants
+ * Centralized constants for maintaining consistency across the application
  */
 
-/** Duration in milliseconds for long-press gesture to trigger delete action */
-export const LONG_PRESS_DURATION = 500;
+// This file is intentionally minimal as the long-press functionality has been removed
+// in favor of explicit delete buttons for better browser compatibility
