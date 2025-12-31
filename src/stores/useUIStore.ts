@@ -21,6 +21,7 @@ interface UIState {
   setPlaybackState: (isPlaying: boolean) => void;
   startSongPlayback: (songId: string) => void;
   startSectionPlayback: (songId: string, sectionIndex: number) => void;
+  advanceToNextSection: () => void;
   stopPlayback: () => void;
 
   // Actions - Navigation
@@ -72,6 +73,12 @@ export const useUIStore = create<UIState>()((set) => ({
       currentSongId: songId,
       currentSectionIndex: sectionIndex,
     });
+  },
+
+  advanceToNextSection: () => {
+    set((state) => ({
+      currentSectionIndex: state.currentSectionIndex + 1,
+    }));
   },
 
   stopPlayback: () => {

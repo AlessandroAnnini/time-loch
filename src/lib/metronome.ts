@@ -9,6 +9,7 @@ export class MetronomeEngine {
   private currentMeasure = 0;
   private accentPattern: number[] = [];
   private onComplete: (() => void) | null = null;
+  private onSectionComplete: (() => void) | null = null;
   private isDebugMode = false; // Enable for logging
 
   constructor() {
@@ -134,7 +135,8 @@ export class MetronomeEngine {
     startIndex: number,
     sound: MetronomeSound,
     volume: number,
-    onComplete?: () => void
+    onComplete?: () => void,
+    onSectionComplete?: () => void
   ): Promise<void> {
     this.log('=== playSections called ===');
     this.log('Sections to play:', sections.length - startIndex);
@@ -145,6 +147,7 @@ export class MetronomeEngine {
 
     this.currentSound = sound;
     this.onComplete = onComplete || null;
+    this.onSectionComplete = onSectionComplete || null;
 
     // Create synth with current sound profile
     this.synth = this.createSynth(sound);
@@ -166,6 +169,17 @@ export class MetronomeEngine {
       );
       const nextTime = this.scheduleSection(section, currentTime);
       this.log(`Section ends at: ${nextTime.toFixed(3)}s`);
+      
+      // Schedule section completion callback (unless it's the last section)
+      if (i < sections.length - 1 && this.onSectionComplete) {
+        Tone.Transport.schedule(() => {
+          this.log(`=== Section ${i + 1} complete ===`);
+          if (this.onSectionComplete) {
+            this.onSectionComplete();
+          }
+        }, nextTime);
+      }
+      
       currentTime = nextTime;
     }
 

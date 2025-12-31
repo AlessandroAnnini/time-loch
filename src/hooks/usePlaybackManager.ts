@@ -16,6 +16,7 @@ export function usePlaybackManager() {
   const currentSongId = useUIStore((state) => state.currentSongId);
   const currentSectionIndex = useUIStore((state) => state.currentSectionIndex);
   const stopPlayback = useUIStore((state) => state.stopPlayback);
+  const advanceToNextSection = useUIStore((state) => state.advanceToNextSection);
 
   useEffect(() => {
     if (!isPlaying || !currentSongId) {
@@ -46,6 +47,10 @@ export function usePlaybackManager() {
       () => {
         // Callback when all sections complete
         stopPlayback();
+      },
+      () => {
+        // Callback when each section completes
+        advanceToNextSection();
       }
     );
 
@@ -61,5 +66,6 @@ export function usePlaybackManager() {
     metronomeVolume,
     metronomeSound,
     stopPlayback,
+    advanceToNextSection,
   ]);
 }

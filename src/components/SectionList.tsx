@@ -31,6 +31,7 @@ interface SortableSectionItemProps {
   index: number;
   songId: string;
   isPlaying: boolean;
+  isCurrentlyPlaying: boolean;
   onPlay: (e: React.MouseEvent, index: number) => void;
   onDelete: (e: React.MouseEvent, sectionId: string) => void;
 }
@@ -39,6 +40,7 @@ function SortableSectionItem({
   section,
   index,
   isPlaying,
+  isCurrentlyPlaying,
   onPlay,
   onDelete,
 }: SortableSectionItemProps) {
@@ -61,8 +63,12 @@ function SortableSectionItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center gap-3 p-4 bg-card border rounded-lg ${
-        isPlaying ? 'opacity-50' : ''
+      className={`flex items-center gap-3 p-4 border rounded-lg transition-colors ${
+        isCurrentlyPlaying
+          ? 'bg-primary/20 border-primary'
+          : 'bg-card'
+      } ${
+        isPlaying && !isCurrentlyPlaying ? 'opacity-50' : ''
       } ${isDragging ? 'opacity-50 z-50' : ''}`}>
       <button
         ref={setActivatorNodeRef}
@@ -113,6 +119,8 @@ export function SectionList({ songId }: SectionListProps) {
   const songs = useAppStore((state) => state.songs);
   const reorderSections = useAppStore((state) => state.reorderSections);
   const isPlaying = useUIStore((state) => state.isPlaying);
+  const currentSongId = useUIStore((state) => state.currentSongId);
+  const currentSectionIndex = useUIStore((state) => state.currentSectionIndex);
   const openDeleteDialog = useUIStore((state) => state.openDeleteDialog);
   const startSectionPlayback = useUIStore(
     (state) => state.startSectionPlayback
@@ -183,6 +191,11 @@ export function SectionList({ songId }: SectionListProps) {
               index={index}
               songId={songId}
               isPlaying={isPlaying}
+              isCurrentlyPlaying={
+                isPlaying &&
+                currentSongId === songId &&
+                currentSectionIndex === index
+              }
               onPlay={handlePlay}
               onDelete={handleDelete}
             />
