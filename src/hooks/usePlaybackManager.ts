@@ -19,6 +19,7 @@ export function usePlaybackManager() {
   const advanceToNextSection = useUIStore(
     (state) => state.advanceToNextSection
   );
+  const setCurrentMeasure = useUIStore((state) => state.setCurrentMeasure);
 
   useEffect(() => {
     if (!isPlaying || !currentSongId) {
@@ -53,6 +54,10 @@ export function usePlaybackManager() {
       () => {
         // Callback when each section completes
         advanceToNextSection();
+      },
+      (measure) => {
+        // Callback when each measure completes
+        setCurrentMeasure(measure);
       }
     );
 
@@ -69,5 +74,6 @@ export function usePlaybackManager() {
     metronomeSound,
     stopPlayback,
     advanceToNextSection,
+    setCurrentMeasure,
   ]);
 }

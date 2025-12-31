@@ -6,6 +6,7 @@ interface UIState {
   isPlaying: boolean;
   currentSongId: string | null;
   currentSectionIndex: number;
+  currentMeasureInSection: number;
 
   // Navigation
   currentPage: Page;
@@ -22,6 +23,7 @@ interface UIState {
   startSongPlayback: (songId: string) => void;
   startSectionPlayback: (songId: string, sectionIndex: number) => void;
   advanceToNextSection: () => void;
+  setCurrentMeasure: (measure: number) => void;
   stopPlayback: () => void;
 
   // Actions - Navigation
@@ -47,6 +49,7 @@ export const useUIStore = create<UIState>()((set) => ({
   isPlaying: false,
   currentSongId: null,
   currentSectionIndex: 0,
+  currentMeasureInSection: 0,
   currentPage: 'home',
   selectedSongId: null,
   isCreateSongDialogOpen: false,
@@ -64,6 +67,7 @@ export const useUIStore = create<UIState>()((set) => ({
       isPlaying: true,
       currentSongId: songId,
       currentSectionIndex: 0,
+      currentMeasureInSection: 1,
     });
   },
 
@@ -72,13 +76,19 @@ export const useUIStore = create<UIState>()((set) => ({
       isPlaying: true,
       currentSongId: songId,
       currentSectionIndex: sectionIndex,
+      currentMeasureInSection: 1,
     });
   },
 
   advanceToNextSection: () => {
     set((state) => ({
       currentSectionIndex: state.currentSectionIndex + 1,
+      currentMeasureInSection: 1,
     }));
+  },
+
+  setCurrentMeasure: (measure) => {
+    set({ currentMeasureInSection: measure });
   },
 
   stopPlayback: () => {
@@ -86,6 +96,7 @@ export const useUIStore = create<UIState>()((set) => ({
       isPlaying: false,
       currentSongId: null,
       currentSectionIndex: 0,
+      currentMeasureInSection: 0,
     });
   },
 

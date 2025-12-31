@@ -10,6 +10,7 @@ export class MetronomeEngine {
   private accentPattern: number[] = [];
   private onComplete: (() => void) | null = null;
   private onSectionComplete: (() => void) | null = null;
+  private onMeasureComplete: ((measure: number) => void) | null = null;
   private isDebugMode = false; // Enable for logging
 
   constructor() {
@@ -115,11 +116,15 @@ export class MetronomeEngine {
         const isAccent = this.isAccentedBeat(beat);
         const scheduledTime = currentTime;
         Tone.Transport.schedule((time) => {
-          this.playClick(time, isAccent);
-          this.currentBeat = (this.currentBeat + 1) % beats;
+          // Fire callback at START of measure (on accent beat)
           if (this.currentBeat === 0) {
             this.currentMeasure++;
+            if (this.onMeasureComplete) {
+              this.onMeasureComplete(this.currentMeasure);
+            }
           }
+          this.playClick(time, isAccent);
+          this.currentBeat = (this.currentBeat + 1) % beats;
         }, scheduledTime);
         currentTime += beatDuration;
       }
@@ -136,7 +141,8 @@ export class MetronomeEngine {
     sound: MetronomeSound,
     volume: number,
     onComplete?: () => void,
-    onSectionComplete?: () => void
+    onSectionComplete?: () => void,
+    onMeasureComplete?: (measure: number) => void
   ): Promise<void> {
     this.log('=== playSections called ===');
     this.log('Sections to play:', sections.length - startIndex);
@@ -148,6 +154,7 @@ export class MetronomeEngine {
     this.currentSound = sound;
     this.onComplete = onComplete || null;
     this.onSectionComplete = onSectionComplete || null;
+    this.onMeasureComplete = onMeasureComplete || null;
 
     // Create synth with current sound profile
     this.synth = this.createSynth(sound);

@@ -32,6 +32,7 @@ interface SortableSectionItemProps {
   songId: string;
   isPlaying: boolean;
   isCurrentlyPlaying: boolean;
+  currentMeasure: number;
   onPlay: (e: React.MouseEvent, index: number) => void;
   onDelete: (e: React.MouseEvent, sectionId: string) => void;
 }
@@ -41,6 +42,7 @@ function SortableSectionItem({
   index,
   isPlaying,
   isCurrentlyPlaying,
+  currentMeasure,
   onPlay,
   onDelete,
 }: SortableSectionItemProps) {
@@ -96,6 +98,14 @@ function SortableSectionItem({
         </div>
       </div>
 
+      {isCurrentlyPlaying && currentMeasure > 0 && (
+        <div className="flex items-center justify-center px-4">
+          <div className="text-3xl font-bold leading-tight text-center">
+            {currentMeasure}/{section.measures}
+          </div>
+        </div>
+      )}
+
       <Button
         variant="ghost"
         size="icon"
@@ -119,6 +129,9 @@ export function SectionList({ songId }: SectionListProps) {
   const isPlaying = useUIStore((state) => state.isPlaying);
   const currentSongId = useUIStore((state) => state.currentSongId);
   const currentSectionIndex = useUIStore((state) => state.currentSectionIndex);
+  const currentMeasureInSection = useUIStore(
+    (state) => state.currentMeasureInSection
+  );
   const openDeleteDialog = useUIStore((state) => state.openDeleteDialog);
   const startSectionPlayback = useUIStore(
     (state) => state.startSectionPlayback
@@ -194,6 +207,7 @@ export function SectionList({ songId }: SectionListProps) {
                 currentSongId === songId &&
                 currentSectionIndex === index
               }
+              currentMeasure={currentMeasureInSection}
               onPlay={handlePlay}
               onDelete={handleDelete}
             />
