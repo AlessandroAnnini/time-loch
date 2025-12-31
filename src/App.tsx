@@ -8,7 +8,7 @@ import { usePlaybackManager } from '@/hooks/usePlaybackManager';
 
 function App() {
   const currentPage = useUIStore((state) => state.currentPage);
-  
+
   // Enable playback integration with Tone.js metronome
   usePlaybackManager();
 

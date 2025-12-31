@@ -25,7 +25,7 @@ export function CreateSectionDialog() {
   const [noteValue, setNoteValue] = useState('4');
   const [measures, setMeasures] = useState('8');
 
-    const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim() && validateBpm()) {
       createSection(

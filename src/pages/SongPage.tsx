@@ -56,13 +56,15 @@ export function SongPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+      <header
+        className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60"
+        role="banner">
         <div className="container flex h-14 items-center px-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigateTo('home')}
-            aria-label="Back to home">
+            aria-label="Back to songs list">
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <h1 className="text-xl font-bold ml-2 flex-1 truncate">
@@ -73,45 +75,53 @@ export function SongPage() {
       </header>
 
       {/* Main Content */}
-      <main className="container px-4 py-6 space-y-6">
+      <main
+        className="container px-4 py-6 space-y-6"
+        role="main"
+        aria-label="Song details">
         {/* Song Details */}
-        <div className="space-y-4">
-          <div>
-            <label
-              htmlFor="song-title"
-              className="text-sm font-medium mb-2 block">
-              Song Title
-            </label>
-            <Input
-              id="song-title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              onBlur={handleTitleBlur}
-              placeholder="Enter song title"
-              className="text-lg"
-            />
-          </div>
+        <section aria-label="Song information">
+          <div className="space-y-4">
+            <div>
+              <label
+                htmlFor="song-title"
+                className="text-sm font-medium mb-2 block">
+                Song Title
+              </label>
+              <Input
+                id="song-title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                onBlur={handleTitleBlur}
+                placeholder="Enter song title"
+                className="text-lg"
+                aria-required="true"
+              />
+            </div>
 
-          <div>
-            <label
-              htmlFor="song-notes"
-              className="text-sm font-medium mb-2 block">
-              Notes
-            </label>
-            <Textarea
-              id="song-notes"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              onBlur={handleNotesBlur}
-              placeholder="Add notes about this song..."
-              rows={3}
-            />
+            <div>
+              <label
+                htmlFor="song-notes"
+                className="text-sm font-medium mb-2 block">
+                Notes
+              </label>
+              <Textarea
+                id="song-notes"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                onBlur={handleNotesBlur}
+                placeholder="Add notes about this song..."
+                rows={3}
+                aria-describedby="notes-hint"
+              />
+              <p id="notes-hint" className="sr-only">
+                Optional notes about the song
+              </p>
+            </div>
           </div>
-        </div>
-
+        </section>{' '}
         {/* Playback Controls */}
         <PlaybackControls songId={song.id} />
-
         {/* Sections Header */}
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">Sections</h2>
@@ -120,7 +130,6 @@ export function SongPage() {
             Add Section
           </Button>
         </div>
-
         {/* Sections List */}
         <SectionList songId={song.id} />
       </main>

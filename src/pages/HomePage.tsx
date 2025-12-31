@@ -15,24 +15,28 @@ export function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+      <header
+        className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60"
+        role="banner">
         <div className="container flex h-14 items-center px-4">
           <h1 className="text-xl font-bold">Time Loch</h1>
-          <div className="ml-auto flex items-center gap-2">
+          <nav
+            className="ml-auto flex items-center gap-2"
+            aria-label="Main navigation">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => navigateTo('about')}
-              aria-label="About">
+              aria-label="About Time Loch">
               <Info className="h-5 w-5" />
             </Button>
             <ModeToggle />
-          </div>
+          </nav>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container px-4 py-6">
+      <main className="container px-4 py-6" role="main" aria-label="Songs list">
         <SongList />
       </main>
 

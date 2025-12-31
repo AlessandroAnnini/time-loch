@@ -22,7 +22,7 @@ export function CreateSongDialog() {
   const [title, setTitle] = useState('');
   const [notes, setNotes] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title.trim()) {
       createSong(title.trim(), notes.trim());
