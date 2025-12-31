@@ -9,10 +9,17 @@ export class MetronomeEngine {
   private currentMeasure = 0;
   private accentPattern: number[] = [];
   private onComplete: (() => void) | null = null;
+  private isDebugMode = false; // Enable for logging
 
   constructor() {
     // Initialize Tone.js context
     this.initializeAudio();
+  }
+
+  private log(...args: unknown[]): void {
+    if (this.isDebugMode) {
+      console.log('[Metronome]', ...args);
+    }
   }
 
   private async initializeAudio(): Promise<void> {
@@ -51,6 +58,9 @@ export class MetronomeEngine {
     if (!this.synth) return;
 
     const velocity = isAccent ? 1.0 : 0.6;
+    this.log(
+      `Click at ${time.toFixed(3)}s - Beat ${this.currentBeat + 1} - ${isAccent ? 'ACCENT' : 'normal'}`
+    );
 
     if (this.currentSound === 'percussive') {
       (this.synth as Tone.MembraneSynth).triggerAttackRelease(
@@ -77,7 +87,10 @@ export class MetronomeEngine {
     return beat === 0;
   }
 
-  private scheduleSection(section: Section, startTime: number): number {
+  private scheduleSection(
+    section: Section,
+    startTime: number
+  ): number {
     const { bpm, timeSignature, measures, accentPattern } = section;
     const { beats } = timeSignature;
 
@@ -124,6 +137,10 @@ export class MetronomeEngine {
     volume: number,
     onComplete?: () => void
   ): Promise<void> {
+    this.log('=== playSections called ===');
+    this.log('Sections to play:', sections.length - startIndex);
+    this.log('Start time:', Tone.now());
+
     await this.initializeAudio();
     this.stop();
 
@@ -136,32 +153,49 @@ export class MetronomeEngine {
 
     // Schedule all sections from startIndex
     let currentTime = Tone.now() + 0.1; // Small delay to ensure audio is ready
+    this.log('Initial schedule time:', currentTime.toFixed(3));
+
     for (let i = startIndex; i < sections.length; i++) {
-      currentTime = this.scheduleSection(sections[i], currentTime);
+      const section = sections[i];
+      this.log(
+        `Scheduling section ${i + 1}: ${section.name} - ${section.bpm}BPM - ${section.timeSignature.beats}/${section.timeSignature.noteValue} - ${section.measures} measures`
+      );
+      const nextTime = this.scheduleSection(section, currentTime);
+      this.log(`Section ends at: ${nextTime.toFixed(3)}s`);
+      currentTime = nextTime;
     }
 
     // Schedule completion callback
     if (this.onComplete) {
+      this.log(`Scheduling completion callback at ${currentTime.toFixed(3)}s`);
       Tone.Transport.schedule(() => {
-        // Store callback before cleanup
-        const callback = this.onComplete;
-
-        // Clean up Transport and resources
-        this.cleanupPlayback();
-
-        // Notify UI that playback completed
-        if (callback) {
-          callback();
+        this.log('=== Playback complete ===');
+        this.stop();
+        if (this.onComplete) {
+          this.onComplete();
         }
       }, currentTime);
     }
 
     // Start transport
+    this.log('Starting Transport at position:', Tone.Transport.position);
     Tone.Transport.start();
+    this.log('Transport state:', Tone.Transport.state);
   }
 
-  private cleanupPlayback(): void {
-    // Dispose of audio resources but keep Transport ready for next playback
+  public stop(): void {
+    this.log('=== stop() called ===');
+    this.log('Transport state before stop:', Tone.Transport.state);
+    this.log('Transport position before stop:', Tone.Transport.position);
+
+    // CRITICAL: Stop and reset in correct order
+    Tone.Transport.cancel(); // Cancel all scheduled events first
+    Tone.Transport.stop();   // Stop the transport
+    Tone.Transport.position = 0; // Reset position to beginning
+
+    this.log('Transport state after stop:', Tone.Transport.state);
+    this.log('Transport position after stop:', Tone.Transport.position);
+
     if (this.synth) {
       this.synth.dispose();
       this.synth = null;
@@ -172,26 +206,8 @@ export class MetronomeEngine {
       this.loop = null;
     }
 
-    // Reset playback state
     this.currentBeat = 0;
     this.currentMeasure = 0;
-    this.onComplete = null;
-  }
-
-  public stop(): void {
-    // Reset position first to ensure immediate restart
-    Tone.Transport.position = 0;
-
-    // Only stop if Transport is actually running
-    if (Tone.Transport.state === 'started') {
-      Tone.Transport.stop();
-    }
-
-    // Cancel all scheduled events
-    Tone.Transport.cancel();
-
-    // Clean up resources
-    this.cleanupPlayback();
   }
 
   public async updateVolume(volume: number): Promise<void> {
@@ -201,8 +217,14 @@ export class MetronomeEngine {
   }
 
   public dispose(): void {
+    this.log('=== dispose() called ===');
     this.stop();
-    Tone.Transport.dispose();
+    // Don't dispose the Transport - it's global and shared
+  }
+
+  public enableDebugMode(enabled: boolean): void {
+    this.isDebugMode = enabled;
+    console.log(`[Metronome] Debug mode ${enabled ? 'enabled' : 'disabled'}`);
   }
 }
 
@@ -215,3 +237,11 @@ export const getMetronome = (): MetronomeEngine => {
   }
   return metronomeInstance;
 };
+
+// Debug helper - expose to window for console access
+if (typeof window !== 'undefined') {
+  (window as any).enableMetronomeDebug = (enabled: boolean = true) => {
+    const metronome = getMetronome();
+    metronome.enableDebugMode(enabled);
+  };
+}
