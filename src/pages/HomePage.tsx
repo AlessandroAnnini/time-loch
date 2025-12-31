@@ -19,7 +19,14 @@ export function HomePage() {
         className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60"
         role="banner">
         <div className="container flex h-14 items-center px-4">
-          <h1 className="text-xl font-bold">Time Loch</h1>
+          <div className="flex items-center gap-2">
+            <img
+              src="/icon-192.png"
+              alt="Time Loch Icon"
+              className="h-8 w-8 rounded-lg"
+            />
+            <h1 className="text-xl font-bold">Time Loch</h1>
+          </div>
           <nav
             className="ml-auto flex items-center gap-2"
             aria-label="Main navigation">
