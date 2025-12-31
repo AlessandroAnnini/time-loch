@@ -77,10 +77,7 @@ export class MetronomeEngine {
     return beat === 0;
   }
 
-  private scheduleSection(
-    section: Section,
-    startTime: number
-  ): number {
+  private scheduleSection(section: Section, startTime: number): number {
     const { bpm, timeSignature, measures, accentPattern } = section;
     const { beats } = timeSignature;
 
@@ -148,10 +145,10 @@ export class MetronomeEngine {
       Tone.Transport.schedule(() => {
         // Store callback before cleanup
         const callback = this.onComplete;
-        
+
         // Clean up Transport and resources
         this.cleanupPlayback();
-        
+
         // Notify UI that playback completed
         if (callback) {
           callback();
@@ -182,16 +179,16 @@ export class MetronomeEngine {
   }
 
   public stop(): void {
+    // Reset position first to ensure immediate restart
+    Tone.Transport.position = 0;
+
     // Only stop if Transport is actually running
     if (Tone.Transport.state === 'started') {
       Tone.Transport.stop();
     }
-    
+
     // Cancel all scheduled events
     Tone.Transport.cancel();
-    
-    // Reset position to beginning
-    Tone.Transport.position = 0;
 
     // Clean up resources
     this.cleanupPlayback();
