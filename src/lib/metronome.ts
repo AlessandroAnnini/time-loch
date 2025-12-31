@@ -182,8 +182,10 @@ export class MetronomeEngine {
   }
 
   public stop(): void {
-    // Stop Transport
-    Tone.Transport.stop();
+    // Only stop if Transport is actually running
+    if (Tone.Transport.state === 'started') {
+      Tone.Transport.stop();
+    }
     
     // Cancel all scheduled events
     Tone.Transport.cancel();
