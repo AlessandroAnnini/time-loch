@@ -34,6 +34,7 @@ interface UIState {
   closeCreateSectionDialog: () => void;
   openDeleteConfirm: (target: DeleteTarget) => void;
   closeDeleteConfirm: () => void;
+  openDeleteDialog: (type: 'song' | 'section', id: string, songId?: string) => void;
 }
 
 export const useUIStore = create<UIState>()((set) => ({
@@ -117,6 +118,13 @@ export const useUIStore = create<UIState>()((set) => ({
     set({
       isDeleteConfirmOpen: false,
       deleteTarget: null,
+    });
+  },
+
+  openDeleteDialog: (type, id, songId) => {
+    set({
+      isDeleteConfirmOpen: true,
+      deleteTarget: { type, id, songId },
     });
   },
 }));

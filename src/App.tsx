@@ -1,12 +1,21 @@
 import { ThemeProvider } from '@/components/theme-provider';
-import { Button } from '@/components/ui/button';
+import { HomePage } from '@/pages/HomePage';
+import { SongPage } from '@/pages/SongPage';
+import { AboutPage } from '@/pages/AboutPage';
+import { useUIStore } from '@/stores/useUIStore';
+import { usePlaybackManager } from '@/hooks/usePlaybackManager';
 
 function App() {
+  const currentPage = useUIStore((state) => state.currentPage);
+  
+  // Enable playback integration with Tone.js metronome
+  usePlaybackManager();
+
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <div className="flex min-h-svh flex-col items-center justify-center">
-        <Button>Click me</Button>
-      </div>
+      {currentPage === 'home' && <HomePage />}
+      {currentPage === 'song' && <SongPage />}
+      {currentPage === 'about' && <AboutPage />}
     </ThemeProvider>
   );
 }

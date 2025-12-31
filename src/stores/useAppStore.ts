@@ -13,7 +13,10 @@ interface AppState {
 
   // Actions - Songs
   createSong: (song: Omit<Song, 'id' | 'createdAt' | 'updatedAt'>) => void;
-  updateSong: (id: string, updates: Partial<Omit<Song, 'id' | 'createdAt'>>) => void;
+  updateSong: (
+    id: string,
+    updates: Partial<Omit<Song, 'id' | 'createdAt'>>
+  ) => void;
   deleteSong: (id: string) => void;
   getSong: (id: string) => Song | undefined;
 
