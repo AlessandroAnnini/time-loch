@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { ArrowLeft, Plus, Edit2, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +9,7 @@ import { DeleteConfirmDialog } from '@/components/DeleteConfirmDialog';
 import { ModeToggle } from '@/components/mode-toggle';
 import { useAppStore } from '@/stores/useAppStore';
 import { useUIStore } from '@/stores/useUIStore';
+import { useInlineEdit } from '@/hooks/useInlineEdit';
 
 export function SongPage() {
   const selectedSongId = useUIStore((state) => state.selectedSongId);
@@ -23,10 +23,13 @@ export function SongPage() {
 
   const song = songs.find((s) => s.id === selectedSongId);
 
-  const [title, setTitle] = useState(song?.title || '');
-  const [notes, setNotes] = useState(song?.notes || '');
-  const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [isEditingNotes, setIsEditingNotes] = useState(false);
+  const titleEdit = useInlineEdit(song?.title || '', (value) => {
+    if (song) updateSong(song.id, { title: value });
+  });
+
+  const notesEdit = useInlineEdit(song?.notes || '', (value) => {
+    if (song) updateSong(song.id, { notes: value });
+  });
 
   if (!song) {
     return (
@@ -40,49 +43,6 @@ export function SongPage() {
       </div>
     );
   }
-
-  const handleTitleBlur = () => {
-    if (title.trim() && title !== song.title) {
-      updateSong(song.id, { title: title.trim() });
-    } else if (!title.trim()) {
-      setTitle(song.title);
-    }
-  };
-
-  const handleNotesBlur = () => {
-    if (notes !== song.notes) {
-      updateSong(song.id, { notes });
-    }
-  };
-
-  const handleSaveTitle = () => {
-    if (title.trim() && title !== song.title) {
-      updateSong(song.id, { title: title.trim() });
-      setIsEditingTitle(false);
-    } else if (!title.trim()) {
-      setTitle(song.title);
-      setIsEditingTitle(false);
-    } else {
-      setIsEditingTitle(false);
-    }
-  };
-
-  const handleCancelTitle = () => {
-    setTitle(song.title);
-    setIsEditingTitle(false);
-  };
-
-  const handleSaveNotes = () => {
-    if (notes !== song.notes) {
-      updateSong(song.id, { notes });
-    }
-    setIsEditingNotes(false);
-  };
-
-  const handleCancelNotes = () => {
-    setNotes(song.notes || '');
-    setIsEditingNotes(false);
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -118,26 +78,26 @@ export function SongPage() {
                 <label htmlFor="song-title" className="text-sm font-medium">
                   Song Title
                 </label>
-                {!isEditingTitle && (
+                {!titleEdit.isEditing && (
                   <Button
                     size="icon"
                     variant="ghost"
                     className="h-6 w-6"
-                    onClick={() => setIsEditingTitle(true)}
+                    onClick={titleEdit.startEditing}
                     aria-label="Edit title">
                     <Edit2 className="h-3.5 w-3.5" />
                   </Button>
                 )}
               </div>
-              {isEditingTitle ? (
+              {titleEdit.isEditing ? (
                 <div className="flex gap-2">
                   <Input
                     id="song-title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    value={titleEdit.value}
+                    onChange={(e) => titleEdit.setValue(e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleSaveTitle();
-                      if (e.key === 'Escape') handleCancelTitle();
+                      if (e.key === 'Enter') titleEdit.handleSave();
+                      if (e.key === 'Escape') titleEdit.handleCancel();
                     }}
                     placeholder="Enter song title"
                     className="text-lg"
@@ -147,14 +107,14 @@ export function SongPage() {
                   <Button
                     size="icon"
                     variant="ghost"
-                    onClick={handleSaveTitle}
+                    onClick={titleEdit.handleSave}
                     aria-label="Save title">
                     <Check className="h-4 w-4" />
                   </Button>
                   <Button
                     size="icon"
                     variant="ghost"
-                    onClick={handleCancelTitle}
+                    onClick={titleEdit.handleCancel}
                     aria-label="Cancel editing">
                     <X className="h-4 w-4" />
                   </Button>
@@ -169,25 +129,25 @@ export function SongPage() {
                 <label htmlFor="song-notes" className="text-sm font-medium">
                   Notes
                 </label>
-                {!isEditingNotes && (
+                {!notesEdit.isEditing && (
                   <Button
                     size="icon"
                     variant="ghost"
                     className="h-6 w-6"
-                    onClick={() => setIsEditingNotes(true)}
+                    onClick={notesEdit.startEditing}
                     aria-label="Edit notes">
                     <Edit2 className="h-3.5 w-3.5" />
                   </Button>
                 )}
               </div>
-              {isEditingNotes ? (
+              {notesEdit.isEditing ? (
                 <div className="space-y-2">
                   <Textarea
                     id="song-notes"
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
+                    value={notesEdit.value}
+                    onChange={(e) => notesEdit.setValue(e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === 'Escape') handleCancelNotes();
+                      if (e.key === 'Escape') notesEdit.handleCancel();
                     }}
                     placeholder="Add notes about this song..."
                     rows={4}
@@ -198,10 +158,10 @@ export function SongPage() {
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={handleCancelNotes}>
+                      onClick={notesEdit.handleCancel}>
                       Cancel
                     </Button>
-                    <Button size="sm" onClick={handleSaveNotes}>
+                    <Button size="sm" onClick={notesEdit.handleSave}>
                       Save
                     </Button>
                   </div>
