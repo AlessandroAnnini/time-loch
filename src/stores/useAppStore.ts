@@ -19,6 +19,7 @@ interface AppState {
   ) => void;
   deleteSong: (id: string) => void;
   getSong: (id: string) => Song | undefined;
+  reorderSongs: (songIds: string[]) => void;
 
   // Actions - Sections
   createSection: (songId: string, section: Omit<Section, 'id'>) => void;
@@ -80,6 +81,17 @@ export const useAppStore = create<AppState>()(
 
       getSong: (id) => {
         return get().songs.find((song) => song.id === id);
+      },
+
+      reorderSongs: (songIds) => {
+        set((state) => {
+          const songMap = new Map(state.songs.map((song) => [song.id, song]));
+          const reorderedSongs = songIds
+            .map((id) => songMap.get(id))
+            .filter((song): song is Song => song !== undefined);
+
+          return { songs: reorderedSongs };
+        });
       },
 
       // Section actions
