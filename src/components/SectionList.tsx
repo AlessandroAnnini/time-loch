@@ -14,7 +14,9 @@ export function SectionList({ songId }: SectionListProps) {
   const songs = useAppStore((state) => state.songs);
   const isPlaying = useUIStore((state) => state.isPlaying);
   const openDeleteDialog = useUIStore((state) => state.openDeleteDialog);
-  const startSectionPlayback = useUIStore((state) => state.startSectionPlayback);
+  const startSectionPlayback = useUIStore(
+    (state) => state.startSectionPlayback
+  );
 
   const song = songs.find((s) => s.id === songId);
   const sections = song?.sections || [];
@@ -75,14 +77,12 @@ export function SectionList({ songId }: SectionListProps) {
           }`}
           onTouchStart={() => handleTouchStart(section.id)}
           onTouchEnd={() => handleTouchEnd(index)}
-          onTouchCancel={handleTouchCancel}
-        >
+          onTouchCancel={handleTouchCancel}>
           <button
             onClick={(e) => handlePlay(e, index)}
             disabled={isPlaying}
             className="flex items-center justify-center h-10 w-10 rounded-full bg-primary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
-            aria-label={`Play ${section.name}`}
-          >
+            aria-label={`Play ${section.name}`}>
             <Play className="h-5 w-5 fill-current" />
           </button>
 

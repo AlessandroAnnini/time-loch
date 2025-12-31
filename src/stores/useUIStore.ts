@@ -34,7 +34,11 @@ interface UIState {
   closeCreateSectionDialog: () => void;
   openDeleteConfirm: (target: DeleteTarget) => void;
   closeDeleteConfirm: () => void;
-  openDeleteDialog: (type: 'song' | 'section', id: string, songId?: string) => void;
+  openDeleteDialog: (
+    type: 'song' | 'section',
+    id: string,
+    songId?: string
+  ) => void;
 }
 
 export const useUIStore = create<UIState>()((set) => ({

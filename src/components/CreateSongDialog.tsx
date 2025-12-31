@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -21,20 +22,17 @@ export function CreateSongDialog() {
   const [title, setTitle] = useState('');
   const [notes, setNotes] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!title.trim()) return;
-
-    createSong({
-      title: title.trim(),
-      notes: notes.trim(),
-      sections: [],
-    });
-
-    setTitle('');
-    setNotes('');
-    closeDialog();
+    if (title.trim()) {
+      createSong(title.trim(), notes.trim());
+      toast.success('Song created', {
+        description: `"${title.trim()}" has been added to your songs.`,
+      });
+      setTitle('');
+      setNotes('');
+      closeDialog();
+    }
   };
 
   const handleCancel = () => {

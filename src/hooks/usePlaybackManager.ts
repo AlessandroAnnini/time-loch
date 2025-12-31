@@ -11,7 +11,7 @@ export function usePlaybackManager() {
   const songs = useAppStore((state) => state.songs);
   const metronomeVolume = useAppStore((state) => state.metronomeVolume);
   const metronomeSound = useAppStore((state) => state.metronomeSound);
-  
+
   const isPlaying = useUIStore((state) => state.isPlaying);
   const currentSongId = useUIStore((state) => state.currentSongId);
   const currentSectionIndex = useUIStore((state) => state.currentSectionIndex);
@@ -36,13 +36,13 @@ export function usePlaybackManager() {
     }
 
     const metronome = getMetronome();
-    
+
     // Start playback with all required parameters
     metronome.playSections(
-      song.sections,           // all sections
-      currentSectionIndex,     // start from this index
-      metronomeSound,          // sound profile
-      metronomeVolume,         // volume (0-1)
+      song.sections, // all sections
+      currentSectionIndex, // start from this index
+      metronomeSound, // sound profile
+      metronomeVolume, // volume (0-1)
       () => {
         // Callback when all sections complete
         stopPlayback();

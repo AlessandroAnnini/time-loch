@@ -7,7 +7,9 @@ import { ModeToggle } from '@/components/mode-toggle';
 import { useUIStore } from '@/stores/useUIStore';
 
 export function HomePage() {
-  const openCreateSongDialog = useUIStore((state) => state.openCreateSongDialog);
+  const openCreateSongDialog = useUIStore(
+    (state) => state.openCreateSongDialog
+  );
   const navigateTo = useUIStore((state) => state.navigateTo);
 
   return (
@@ -21,8 +23,7 @@ export function HomePage() {
               variant="ghost"
               size="icon"
               onClick={() => navigateTo('about')}
-              aria-label="About"
-            >
+              aria-label="About">
               <Info className="h-5 w-5" />
             </Button>
             <ModeToggle />
@@ -41,8 +42,7 @@ export function HomePage() {
           onClick={openCreateSongDialog}
           size="lg"
           className="h-14 w-14 rounded-full shadow-lg"
-          aria-label="Create new song"
-        >
+          aria-label="Create new song">
           <Plus className="h-6 w-6" />
         </Button>
       </div>

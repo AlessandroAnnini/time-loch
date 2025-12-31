@@ -11,25 +11,55 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icon.png'],
+      includeAssets: ['icon.png', 'splash.png'],
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+        ],
+      },
       manifest: {
-        name: 'Time Loch',
+        name: 'Time Loch - Metronome for Musicians',
         short_name: 'Time Loch',
-        description: 'Advanced metronome for Devon Loch band',
+        description:
+          'Advanced metronome with multi-section support for complex song structures',
         theme_color: '#000000',
         background_color: '#ffffff',
         display: 'standalone',
-        start_url: '.',
+        orientation: 'portrait',
+        start_url: '/',
+        scope: '/',
         icons: [
           {
             src: 'icon.png',
             sizes: '192x192',
             type: 'image/png',
+            purpose: 'any',
           },
           {
             src: 'icon.png',
             sizes: '512x512',
             type: 'image/png',
+            purpose: 'any',
+          },
+          {
+            src: 'icon.png',
+            sizes: '1024x1024',
+            type: 'image/png',
+            purpose: 'maskable',
           },
         ],
       },

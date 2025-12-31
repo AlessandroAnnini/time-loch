@@ -15,8 +15,7 @@ export function AboutPage() {
             variant="ghost"
             size="icon"
             onClick={() => navigateTo('home')}
-            aria-label="Back to home"
-          >
+            aria-label="Back to home">
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <h1 className="text-xl font-bold ml-2">About</h1>
@@ -33,8 +32,8 @@ export function AboutPage() {
           <section className="space-y-4">
             <h2 className="text-2xl font-bold">Devon Loch</h2>
             <p className="text-muted-foreground">
-              Time Loch is a metronome application designed for Devon Loch, 
-              a progressive rock band that creates complex musical compositions 
+              Time Loch is a metronome application designed for Devon Loch, a
+              progressive rock band that creates complex musical compositions
               with varying tempos and time signatures.
             </p>
             <div className="flex flex-col gap-2">
@@ -42,8 +41,7 @@ export function AboutPage() {
                 href="https://devonloch.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-primary hover:underline"
-              >
+                className="flex items-center gap-2 text-primary hover:underline">
                 Website
                 <ExternalLink className="h-4 w-4" />
               </a>
@@ -51,8 +49,7 @@ export function AboutPage() {
                 href="https://facebook.com/devonlochband"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-primary hover:underline"
-              >
+                className="flex items-center gap-2 text-primary hover:underline">
                 Facebook
                 <ExternalLink className="h-4 w-4" />
               </a>
@@ -60,8 +57,7 @@ export function AboutPage() {
                 href="https://instagram.com/devonlochband"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-primary hover:underline"
-              >
+                className="flex items-center gap-2 text-primary hover:underline">
                 Instagram
                 <ExternalLink className="h-4 w-4" />
               </a>
@@ -72,25 +68,26 @@ export function AboutPage() {
           <section className="space-y-4">
             <h2 className="text-2xl font-bold">Time Loch</h2>
             <p className="text-muted-foreground">
-              Time Loch is a Progressive Web App (PWA) metronome designed 
-              specifically for musicians who work with complex song structures. 
-              It allows you to create songs with multiple sections, each with 
+              Time Loch is a Progressive Web App (PWA) metronome designed
+              specifically for musicians who work with complex song structures.
+              It allows you to create songs with multiple sections, each with
               its own tempo, time signature, and duration.
             </p>
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">Features</h3>
               <ul className="list-disc list-inside text-muted-foreground space-y-1">
                 <li>Multiple sections per song with different tempos</li>
-                <li>Support for various time signatures (3/4, 4/4, 5/4, 6/8, 7/8, etc.)</li>
+                <li>
+                  Support for various time signatures (3/4, 4/4, 5/4, 6/8, 7/8,
+                  etc.)
+                </li>
                 <li>Sample-accurate audio timing using Tone.js</li>
                 <li>Progressive Web App - works offline</li>
                 <li>Dark/Light theme support</li>
                 <li>Mobile-first responsive design</li>
               </ul>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Version 1.0.0
-            </p>
+            <p className="text-sm text-muted-foreground">Version 1.0.0</p>
           </section>
 
           {/* Developer Attribution */}

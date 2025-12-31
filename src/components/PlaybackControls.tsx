@@ -31,8 +31,7 @@ export function PlaybackControls({ songId }: PlaybackControlsProps) {
           onClick={handlePlay}
           disabled={isPlaying}
           size="lg"
-          className="flex-1"
-        >
+          className="flex-1">
           <Play className="h-5 w-5 mr-2 fill-current" />
           Play Song
         </Button>
@@ -41,8 +40,7 @@ export function PlaybackControls({ songId }: PlaybackControlsProps) {
           onClick={handleStop}
           size="lg"
           variant="destructive"
-          className="flex-1"
-        >
+          className="flex-1">
           <Square className="h-5 w-5 mr-2 fill-current" />
           Stop
         </Button>

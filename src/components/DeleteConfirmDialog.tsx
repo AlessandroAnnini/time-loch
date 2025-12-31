@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -17,16 +18,29 @@ export function DeleteConfirmDialog() {
   const deleteSection = useAppStore((state) => state.deleteSection);
   const getSong = useAppStore((state) => state.getSong);
 
-  const handleDelete = () => {
+    const handleConfirm = () => {
     if (!deleteTarget) return;
 
     if (deleteTarget.type === 'song') {
+      const song = songs.find((s) => s.id === deleteTarget.id);
       deleteSong(deleteTarget.id);
+      toast.success('Song deleted', {
+        description: song ? `"${song.title}" has been removed.` : 'Song has been removed.',
+      });
+      // If we're on the song page, navigate back to home
+      if (currentPage === 'song') {
+        navigateTo('home');
+      }
     } else if (deleteTarget.type === 'section' && deleteTarget.songId) {
+      const song = songs.find((s) => s.id === deleteTarget.songId);
+      const section = song?.sections.find((sec) => sec.id === deleteTarget.id);
       deleteSection(deleteTarget.songId, deleteTarget.id);
+      toast.success('Section deleted', {
+        description: section ? `"${section.name}" has been removed.` : 'Section has been removed.',
+      });
     }
 
-    closeDialog();
+    closeDeleteConfirm();
   };
 
   const getItemName = () => {

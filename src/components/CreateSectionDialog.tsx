@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -24,41 +25,27 @@ export function CreateSectionDialog() {
   const [noteValue, setNoteValue] = useState('4');
   const [measures, setMeasures] = useState('8');
 
-  const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!selectedSongId || !name.trim()) return;
-
-    const bpmValue = parseInt(bpm, 10);
-    const beatsValue = parseInt(beats, 10);
-    const noteValueNum = parseInt(noteValue, 10);
-    const measuresValue = parseInt(measures, 10);
-
-    if (
-      isNaN(bpmValue) ||
-      bpmValue < 35 ||
-      bpmValue > 250 ||
-      isNaN(beatsValue) ||
-      beatsValue < 1 ||
-      isNaN(noteValueNum) ||
-      isNaN(measuresValue) ||
-      measuresValue < 1
-    ) {
-      return;
+    if (name.trim() && validateBpm()) {
+      createSection(
+        selectedSongId,
+        name.trim(),
+        Number(bpm),
+        { beats: Number(numerator), noteValue: Number(denominator) },
+        Number(measures)
+      );
+      toast.success('Section added', {
+        description: `"${name.trim()}" has been added to the song.`,
+      });
+      // Reset form
+      setName('');
+      setBpm('120');
+      setNumerator('4');
+      setDenominator('4');
+      setMeasures('4');
+      closeCreateSectionDialog();
     }
-
-    createSection(selectedSongId, {
-      name: name.trim(),
-      bpm: bpmValue,
-      timeSignature: {
-        beats: beatsValue,
-        noteValue: noteValueNum,
-      },
-      measures: measuresValue,
-    });
-
-    resetForm();
-    closeDialog();
   };
 
   const resetForm = () => {

@@ -14,8 +14,10 @@ import { useUIStore } from '@/stores/useUIStore';
 export function SongPage() {
   const selectedSongId = useUIStore((state) => state.selectedSongId);
   const navigateTo = useUIStore((state) => state.navigateTo);
-  const openCreateSectionDialog = useUIStore((state) => state.openCreateSectionDialog);
-  
+  const openCreateSectionDialog = useUIStore(
+    (state) => state.openCreateSectionDialog
+  );
+
   const songs = useAppStore((state) => state.songs);
   const updateSong = useAppStore((state) => state.updateSong);
 
@@ -60,11 +62,12 @@ export function SongPage() {
             variant="ghost"
             size="icon"
             onClick={() => navigateTo('home')}
-            aria-label="Back to home"
-          >
+            aria-label="Back to home">
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-xl font-bold ml-2 flex-1 truncate">{song.title}</h1>
+          <h1 className="text-xl font-bold ml-2 flex-1 truncate">
+            {song.title}
+          </h1>
           <ModeToggle />
         </div>
       </header>
@@ -74,7 +77,9 @@ export function SongPage() {
         {/* Song Details */}
         <div className="space-y-4">
           <div>
-            <label htmlFor="song-title" className="text-sm font-medium mb-2 block">
+            <label
+              htmlFor="song-title"
+              className="text-sm font-medium mb-2 block">
               Song Title
             </label>
             <Input
@@ -86,9 +91,11 @@ export function SongPage() {
               className="text-lg"
             />
           </div>
-          
+
           <div>
-            <label htmlFor="song-notes" className="text-sm font-medium mb-2 block">
+            <label
+              htmlFor="song-notes"
+              className="text-sm font-medium mb-2 block">
               Notes
             </label>
             <Textarea
@@ -108,11 +115,7 @@ export function SongPage() {
         {/* Sections Header */}
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">Sections</h2>
-          <Button
-            onClick={openCreateSectionDialog}
-            size="sm"
-            variant="outline"
-          >
+          <Button onClick={openCreateSectionDialog} size="sm" variant="outline">
             <Plus className="h-4 w-4 mr-2" />
             Add Section
           </Button>
