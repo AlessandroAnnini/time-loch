@@ -58,7 +58,7 @@ export class MetronomeEngine {
   private playClick(time: number, isAccent: boolean): void {
     if (!this.synth) return;
 
-    const velocity = isAccent ? 1.0 : 0.6;
+    const velocity = isAccent ? 1.0 : 0.85;
     this.log(
       `Click at ${time.toFixed(3)}s - Beat ${this.currentBeat + 1} - ${
         isAccent ? 'ACCENT' : 'normal'

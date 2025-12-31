@@ -6,12 +6,18 @@ import { useState } from 'react';
  *
  * @param initialValue - The initial value to edit
  * @param onSave - Callback when save is triggered
+ * @param options - Optional configuration
+ * @param options.allowEmpty - Whether to allow saving empty values (default: false)
  * @returns Object with editing state and handler functions
  *
  * @example
  * const titleEdit = useInlineEdit(song.title, (value) => {
  *   updateSong(song.id, { title: value });
  * });
+ *
+ * const notesEdit = useInlineEdit(song.notes, (value) => {
+ *   updateSong(song.id, { notes: value });
+ * }, { allowEmpty: true });
  *
  * // In JSX:
  * {titleEdit.isEditing ? (
@@ -29,10 +35,12 @@ import { useState } from 'react';
  */
 export function useInlineEdit(
   initialValue: string,
-  onSave: (value: string) => void
+  onSave: (value: string) => void,
+  options?: { allowEmpty?: boolean }
 ) {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(initialValue);
+  const allowEmpty = options?.allowEmpty ?? false;
 
   const startEditing = () => {
     setValue(initialValue);
@@ -42,12 +50,19 @@ export function useInlineEdit(
   const handleSave = () => {
     const trimmedValue = value.trim();
 
-    // Only save if value has changed and is not empty
-    if (trimmedValue && trimmedValue !== initialValue) {
-      onSave(trimmedValue);
-    } else if (!trimmedValue) {
-      // Reset to initial value if empty
-      setValue(initialValue);
+    // If empty values are allowed, save regardless
+    if (allowEmpty) {
+      if (trimmedValue !== initialValue) {
+        onSave(trimmedValue);
+      }
+    } else {
+      // Only save if value has changed and is not empty
+      if (trimmedValue && trimmedValue !== initialValue) {
+        onSave(trimmedValue);
+      } else if (!trimmedValue) {
+        // Reset to initial value if empty
+        setValue(initialValue);
+      }
     }
 
     setIsEditing(false);

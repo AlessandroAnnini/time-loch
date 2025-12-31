@@ -27,9 +27,13 @@ export function SongPage() {
     if (song) updateSong(song.id, { title: value });
   });
 
-  const notesEdit = useInlineEdit(song?.notes || '', (value) => {
-    if (song) updateSong(song.id, { notes: value });
-  });
+  const notesEdit = useInlineEdit(
+    song?.notes || '',
+    (value) => {
+      if (song) updateSong(song.id, { notes: value });
+    },
+    { allowEmpty: true }
+  );
 
   if (!song) {
     return (
@@ -74,21 +78,13 @@ export function SongPage() {
         <section aria-label="Song information">
           <div className="space-y-4">
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label htmlFor="song-title" className="text-sm font-medium">
-                  Song Title
-                </label>
-                {!titleEdit.isEditing && (
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-6 w-6"
-                    onClick={titleEdit.startEditing}
-                    aria-label="Edit title">
-                    <Edit2 className="h-3.5 w-3.5" />
-                  </Button>
-                )}
-              </div>
+              {!song.title && (
+                <div className="mb-2">
+                  <label htmlFor="song-title" className="text-sm font-medium">
+                    Song Title
+                  </label>
+                </div>
+              )}
               {titleEdit.isEditing ? (
                 <div className="flex gap-2">
                   <Input
@@ -120,26 +116,30 @@ export function SongPage() {
                   </Button>
                 </div>
               ) : (
-                <h2 className="text-2xl font-semibold py-1">{song.title}</h2>
+                <div className="flex items-center justify-between gap-2">
+                  <h2 className="text-2xl font-semibold py-1 flex-1">
+                    {song.title}
+                  </h2>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-8 w-8 shrink-0"
+                    onClick={titleEdit.startEditing}
+                    aria-label="Edit title">
+                    <Edit2 className="h-4 w-4" />
+                  </Button>
+                </div>
               )}
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label htmlFor="song-notes" className="text-sm font-medium">
-                  Notes
-                </label>
-                {!notesEdit.isEditing && (
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-6 w-6"
-                    onClick={notesEdit.startEditing}
-                    aria-label="Edit notes">
-                    <Edit2 className="h-3.5 w-3.5" />
-                  </Button>
-                )}
-              </div>
+              {!song.notes && (
+                <div className="mb-2">
+                  <label htmlFor="song-notes" className="text-sm font-medium">
+                    Notes
+                  </label>
+                </div>
+              )}
               {notesEdit.isEditing ? (
                 <div className="space-y-2">
                   <Textarea
@@ -171,9 +171,19 @@ export function SongPage() {
                 </div>
               ) : (
                 song.notes && (
-                  <p className="text-base leading-relaxed whitespace-pre-wrap py-1">
-                    {song.notes}
-                  </p>
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-base leading-relaxed whitespace-pre-wrap py-1 flex-1">
+                      {song.notes}
+                    </p>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-8 w-8 shrink-0"
+                      onClick={notesEdit.startEditing}
+                      aria-label="Edit notes">
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 )
               )}
             </div>
