@@ -16,7 +16,9 @@ export function usePlaybackManager() {
   const currentSongId = useUIStore((state) => state.currentSongId);
   const currentSectionIndex = useUIStore((state) => state.currentSectionIndex);
   const stopPlayback = useUIStore((state) => state.stopPlayback);
-  const advanceToNextSection = useUIStore((state) => state.advanceToNextSection);
+  const advanceToNextSection = useUIStore(
+    (state) => state.advanceToNextSection
+  );
 
   useEffect(() => {
     if (!isPlaying || !currentSongId) {

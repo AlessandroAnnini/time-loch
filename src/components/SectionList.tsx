@@ -64,12 +64,10 @@ function SortableSectionItem({
       ref={setNodeRef}
       style={style}
       className={`flex items-center gap-3 p-4 border rounded-lg transition-colors ${
-        isCurrentlyPlaying
-          ? 'bg-primary/20 border-primary'
-          : 'bg-card'
-      } ${
-        isPlaying && !isCurrentlyPlaying ? 'opacity-50' : ''
-      } ${isDragging ? 'opacity-50 z-50' : ''}`}>
+        isCurrentlyPlaying ? 'bg-primary/20 border-primary' : 'bg-card'
+      } ${isPlaying && !isCurrentlyPlaying ? 'opacity-50' : ''} ${
+        isDragging ? 'opacity-50 z-50' : ''
+      }`}>
       <button
         ref={setActivatorNodeRef}
         {...attributes}

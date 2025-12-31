@@ -169,7 +169,7 @@ export class MetronomeEngine {
       );
       const nextTime = this.scheduleSection(section, currentTime);
       this.log(`Section ends at: ${nextTime.toFixed(3)}s`);
-      
+
       // Schedule section completion callback (unless it's the last section)
       if (i < sections.length - 1 && this.onSectionComplete) {
         Tone.Transport.schedule(() => {
@@ -179,7 +179,7 @@ export class MetronomeEngine {
           }
         }, nextTime);
       }
-      
+
       currentTime = nextTime;
     }
 

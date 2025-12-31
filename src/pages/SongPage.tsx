@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Plus } from 'lucide-react';
+import { ArrowLeft, Plus, Edit2, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -25,6 +25,8 @@ export function SongPage() {
 
   const [title, setTitle] = useState(song?.title || '');
   const [notes, setNotes] = useState(song?.notes || '');
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [isEditingNotes, setIsEditingNotes] = useState(false);
 
   if (!song) {
     return (
@@ -51,6 +53,35 @@ export function SongPage() {
     if (notes !== song.notes) {
       updateSong(song.id, { notes });
     }
+  };
+
+  const handleSaveTitle = () => {
+    if (title.trim() && title !== song.title) {
+      updateSong(song.id, { title: title.trim() });
+      setIsEditingTitle(false);
+    } else if (!title.trim()) {
+      setTitle(song.title);
+      setIsEditingTitle(false);
+    } else {
+      setIsEditingTitle(false);
+    }
+  };
+
+  const handleCancelTitle = () => {
+    setTitle(song.title);
+    setIsEditingTitle(false);
+  };
+
+  const handleSaveNotes = () => {
+    if (notes !== song.notes) {
+      updateSong(song.id, { notes });
+    }
+    setIsEditingNotes(false);
+  };
+
+  const handleCancelNotes = () => {
+    setNotes(song.notes || '');
+    setIsEditingNotes(false);
   };
 
   return (
@@ -83,40 +114,108 @@ export function SongPage() {
         <section aria-label="Song information">
           <div className="space-y-4">
             <div>
-              <label
-                htmlFor="song-title"
-                className="text-sm font-medium mb-2 block">
-                Song Title
-              </label>
-              <Input
-                id="song-title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                onBlur={handleTitleBlur}
-                placeholder="Enter song title"
-                className="text-lg"
-                aria-required="true"
-              />
+              <div className="flex items-center justify-between mb-2">
+                <label htmlFor="song-title" className="text-sm font-medium">
+                  Song Title
+                </label>
+                {!isEditingTitle && (
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-6 w-6"
+                    onClick={() => setIsEditingTitle(true)}
+                    aria-label="Edit title">
+                    <Edit2 className="h-3.5 w-3.5" />
+                  </Button>
+                )}
+              </div>
+              {isEditingTitle ? (
+                <div className="flex gap-2">
+                  <Input
+                    id="song-title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleSaveTitle();
+                      if (e.key === 'Escape') handleCancelTitle();
+                    }}
+                    placeholder="Enter song title"
+                    className="text-lg"
+                    autoFocus
+                    aria-required="true"
+                  />
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={handleSaveTitle}
+                    aria-label="Save title">
+                    <Check className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={handleCancelTitle}
+                    aria-label="Cancel editing">
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ) : (
+                <h2 className="text-2xl font-semibold py-1">{song.title}</h2>
+              )}
             </div>
 
             <div>
-              <label
-                htmlFor="song-notes"
-                className="text-sm font-medium mb-2 block">
-                Notes
-              </label>
-              <Textarea
-                id="song-notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                onBlur={handleNotesBlur}
-                placeholder="Add notes about this song..."
-                rows={3}
-                aria-describedby="notes-hint"
-              />
-              <p id="notes-hint" className="sr-only">
-                Optional notes about the song
-              </p>
+              <div className="flex items-center justify-between mb-2">
+                <label htmlFor="song-notes" className="text-sm font-medium">
+                  Notes
+                </label>
+                {!isEditingNotes && (
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-6 w-6"
+                    onClick={() => setIsEditingNotes(true)}
+                    aria-label="Edit notes">
+                    <Edit2 className="h-3.5 w-3.5" />
+                  </Button>
+                )}
+              </div>
+              {isEditingNotes ? (
+                <div className="space-y-2">
+                  <Textarea
+                    id="song-notes"
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Escape') handleCancelNotes();
+                    }}
+                    placeholder="Add notes about this song..."
+                    rows={4}
+                    autoFocus
+                    aria-describedby="notes-hint"
+                  />
+                  <div className="flex gap-2 justify-end">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleCancelNotes}>
+                      Cancel
+                    </Button>
+                    <Button size="sm" onClick={handleSaveNotes}>
+                      Save
+                    </Button>
+                  </div>
+                  <p id="notes-hint" className="sr-only">
+                    Optional notes about the song
+                  </p>
+                </div>
+              ) : (
+                song.notes && (
+                  <p className="text-base leading-relaxed whitespace-pre-wrap py-1">
+                    {song.notes}
+                  </p>
+                )
+              )}
             </div>
           </div>
         </section>{' '}

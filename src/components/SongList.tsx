@@ -1,5 +1,5 @@
 import { useAppStore, useUIStore } from '@/stores';
-import { Music, Trash2, GripVertical } from 'lucide-react';
+import { Trash2, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DndContext,
@@ -88,18 +88,15 @@ function SortableSongItem({
           </div>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
-          <Music className="h-5 w-5 text-muted-foreground" />
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-muted-foreground hover:text-destructive"
-            onClick={onDelete}
-            disabled={isPlaying}
-            aria-label="Delete song">
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-muted-foreground hover:text-destructive shrink-0"
+          onClick={onDelete}
+          disabled={isPlaying}
+          aria-label="Delete song">
+          <Trash2 className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );
@@ -138,7 +135,6 @@ export function SongList() {
   if (songs.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-        <Music className="h-16 w-16 text-muted-foreground mb-4" />
         <h3 className="text-lg font-semibold mb-2">No songs yet</h3>
         <p className="text-sm text-muted-foreground max-w-sm">
           Create your first song to start structuring your rehearsals with
