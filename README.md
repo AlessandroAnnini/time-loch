@@ -11,6 +11,7 @@ Time Loch structures songs into clearly defined, tempo-accurate sections, helpin
 ## Features
 
 ### Core Functionality
+
 - **Multi-Section Songs**: Create songs with unlimited sections, each with independent tempo, time signature, and duration
 - **Sample-Accurate Timing**: Uses Tone.js Web Audio API with Transport scheduling for professional-grade accuracy
 - **BPM Range**: 35-250 BPM (industry standard for metronomes)
@@ -21,6 +22,7 @@ Time Loch structures songs into clearly defined, tempo-accurate sections, helpin
 - **Section-Level Playback**: Start from any section and play through to the end
 
 ### User Experience
+
 - **Mobile-First Design**: Optimized for touch interactions with 44x44px minimum touch targets
 - **One-Hand Operation**: All critical functions accessible with thumb on phone
 - **Dark/Light Theme**: Persistent theme preference with system detection
@@ -31,6 +33,7 @@ Time Loch structures songs into clearly defined, tempo-accurate sections, helpin
 - **Rehearsal-Safe**: Phone-on-floor usage pattern with clear visual hierarchy
 
 ### Data Management
+
 - **Local Storage Persistence**: All songs and settings stored in browser localStorage
 - **Two-Store Architecture**: Separate UI state (ephemeral) and App state (persistent) using Zustand
 - **CRUD Operations**: Full create, read, update, delete for songs and sections
@@ -40,17 +43,20 @@ Time Loch structures songs into clearly defined, tempo-accurate sections, helpin
 ## Tech Stack
 
 ### Frontend
+
 - **React 19.2.0** - Functional components with hooks
 - **TypeScript (strict mode)** - Full type safety, no `any` types
 - **Vite 7.2.4** - Fast build tool with Hot Module Replacement
 
 ### State Management
+
 - **Zustand** - Lightweight state management with two stores:
   - **UI Store** (ephemeral): Playback state, navigation, dialogs
   - **App Store** (persistent): Songs, sections, theme, metronome settings
 - **Persist Middleware** - localStorage with partialize for selective persistence
 
 ### Audio Engine
+
 - **Tone.js** - Web Audio API wrapper for:
   - Sample-accurate timing via Transport.schedule()
   - Tempo changes and time signature handling
@@ -58,6 +64,7 @@ Time Loch structures songs into clearly defined, tempo-accurate sections, helpin
   - Section scheduling and transitions
 
 ### UI & Styling
+
 - **Tailwind CSS 4.1.18** - Utility-first styling with dark mode
 - **shadcn/ui** - Copy-paste accessible component library
 - **Sonner** - Toast notification system
@@ -65,6 +72,7 @@ Time Loch structures songs into clearly defined, tempo-accurate sections, helpin
 - **next-themes** - Theme provider with system detection
 
 ### PWA
+
 - **vite-plugin-pwa** - Service worker generation with Workbox
 - **Offline caching** - Precache strategies for all assets
 - **Install prompts** - iOS and Android support with custom icons
@@ -72,16 +80,20 @@ Time Loch structures songs into clearly defined, tempo-accurate sections, helpin
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 20.x or higher
 - npm or pnpm
 
 ### Installation
 
 \`\`\`bash
+
 # Install dependencies
+
 npm install
 
 # Start development server
+
 npm run dev
 \`\`\`
 
@@ -90,16 +102,20 @@ Visit \`http://localhost:5173\` to see the app.
 ### Build for Production
 
 \`\`\`bash
+
 # Create production build
+
 npm run build
 
 # Preview production build
+
 npm run preview
 \`\`\`
 
 ## Usage
 
 ### Home Page
+
 - **View Songs**: Scrollable list of all created songs
 - **Create Song**: Tap the **+** floating action button
 - **Open Song**: Tap any song card to view details
@@ -107,6 +123,7 @@ npm run preview
 - **About**: Info icon in header for band information
 
 ### Song Page
+
 - **Edit Title**: Tap title to edit inline, auto-saves on blur
 - **Edit Notes**: Tap notes textarea, auto-saves on blur
 - **View Sections**: Ordered list showing BPM, time signature, measures
@@ -117,6 +134,7 @@ npm run preview
 - **Delete Section**: Long-press (500ms) on section → confirm deletion
 
 ### Creating Sections
+
 1. Tap **Add Section** on song page
 2. Configure:
    - **Section name** (e.g., "Intro", "Verse 1")
@@ -126,6 +144,7 @@ npm run preview
 3. Tap **Create Section**
 
 ### Playback Model
+
 - **Song-Level**: Plays all sections in order from start to finish
 - **Section-Level**: Starts at selected section, plays through to song end
 - **No Loops**: Playback never repeats, always stops at song end
@@ -136,6 +155,7 @@ npm run preview
 ## Architecture
 
 ### Design Philosophy
+
 1. **Minimal UI**: Distraction-free, rehearsal-focused interface
 2. **Deterministic Behavior**: No implicit actions, no hidden state, no "magic"
 3. **Audio Precision**: Timing accuracy over visual effects
@@ -149,6 +169,7 @@ npm run preview
 **Two-Store Separation:**
 
 1. **UI Store** (Ephemeral - No Persistence)
+
    - Playback state: `isPlaying`, `currentSongId`, `currentSectionIndex`
    - Navigation: `currentPage`, `selectedSongId`
    - Dialogs: `isCreateSongDialogOpen`, `deleteTarget`
@@ -163,6 +184,7 @@ npm run preview
 ### Audio Engine (Tone.js)
 
 **MetronomeEngine Class:**
+
 - **Transport Scheduling**: Pre-schedules all sections upfront for seamless transitions
 - **BPM Handling**: Dynamic tempo changes between sections via `Tone.Transport.bpm.value`
 - **Accent Patterns**: First beat accented by default (velocity 1.0 vs 0.6)
@@ -170,11 +192,13 @@ npm run preview
 - **Completion Callback**: Triggers `stopPlayback()` when all sections finish
 
 **Why Not Web Audio API Directly:**
+
 - Too low-level for complex scheduling
 - Tone.js provides Transport abstraction and sample-accurate timing
 - Built-in BPM/tempo handling
 
 ### File Structure
+
 ```
 src/
 ├── stores/
@@ -206,6 +230,7 @@ src/
 ## Testing
 
 ### Manual Testing Strategy
+
 - **UI/UX**: Primary method for component interaction
 - **Audio Accuracy**: Verify against reference metronome
 - **Cross-Browser**: Chrome, Firefox, Safari (iOS)
@@ -213,6 +238,7 @@ src/
 - **Offline Mode**: Airplane mode verification
 
 ### Edge Cases to Test
+
 - Empty song list (empty state rendering)
 - Song with no sections (empty state rendering)
 - Rapid play/stop (race conditions)
@@ -221,7 +247,9 @@ src/
 - Section transitions with tempo changes
 
 ### MetronomeTest Component
+
 Located in `src/components/MetronomeTest.tsx` - validates:
+
 - BPM extremes
 - Various time signatures (4/4, 3/4, 6/8, 5/4, 7/8)
 - Section transitions
@@ -240,17 +268,20 @@ Located in `src/components/MetronomeTest.tsx` - validates:
 ## PWA Features
 
 ### Installation
+
 - **iOS**: Add to Home Screen from Safari
 - **Android**: Install prompt automatically appears
 - **Desktop**: Install from Chrome/Edge address bar
 
 ### Offline Support
+
 - **Service Worker**: Workbox-generated with precaching
 - **Cache-First Strategy**: Assets loaded from cache when offline
 - **Runtime Caching**: Google Fonts cached for 1 year
 - **Fallback**: All core functionality works without network
 
 ### Assets
+
 - **Icons**: 192x192, 512x512, 1024x1024 (maskable)
 - **Splash Screen**: Custom splash.png for iOS
 - **Manifest**: Full web app manifest with theme colors
@@ -259,6 +290,7 @@ Located in `src/components/MetronomeTest.tsx` - validates:
 ## Best Practices Implemented
 
 ### Code Quality
+
 - **Composition over Inheritance**: Zero class inheritance, functional composition via hooks
 - **DRY (Don't Repeat Yourself)**: Shared constants, validation utilities, reusable components
 - **KISS (Keep It Simple)**: Minimal abstractions, direct store actions, simple routing
@@ -267,6 +299,7 @@ Located in `src/components/MetronomeTest.tsx` - validates:
 - **Immutable Updates**: Zustand state updates never mutate directly
 
 ### Metronome Best Practices
+
 - **BPM Range**: 35-250 (industry standard)
 - **Practice Technique**: Start slow (40-60 BPM below target), increase by 2-5 BPM increments
 - **Accent Patterns**: First beat accented to identify measure boundaries
@@ -274,6 +307,7 @@ Located in `src/components/MetronomeTest.tsx` - validates:
 - **Sample Accuracy**: Tone.js Transport scheduling, never setTimeout/setInterval
 
 ### Security & Performance
+
 - **No External Dependencies for Core Features**: All data stored locally
 - **Error Boundary**: Catches React/Tone.js errors, prevents app crash
 - **Bundle Size**: 609 KB (179 KB gzipped) - acceptable for audio library
@@ -296,6 +330,7 @@ Located in `src/components/MetronomeTest.tsx` - validates:
 ## Contributing
 
 This project follows conventional commits with emojis:
+
 - `feat✨:` New feature
 - `fix🐛:` Bug fix
 - `refactor♻️:` Code restructuring

@@ -77,33 +77,40 @@ export class MetronomeEngine {
     return beat === 0;
   }
 
-  private scheduleSection(section: Section, startTime: number): number {
+  private scheduleSection(
+    section: Section,
+    startTime: number
+  ): number {
     const { bpm, timeSignature, measures, accentPattern } = section;
     const { beats } = timeSignature;
 
-    // Calculate beat duration in seconds
+    // Calculate beat duration in seconds (independent of Transport BPM)
     const beatDuration = 60 / bpm;
 
-    // Set transport BPM
-    Tone.Transport.bpm.value = bpm;
+    // Schedule BPM change at section start
+    // Use schedule instead of setting directly to avoid affecting previous sections
+    Tone.Transport.schedule(() => {
+      Tone.Transport.bpm.value = bpm;
+    }, startTime);
 
     // Store section info for beat callback
     this.accentPattern = accentPattern || [];
     this.currentBeat = 0;
     this.currentMeasure = 0;
 
-    // Schedule all beats in this section
+    // Schedule all beats in this section using absolute time (seconds)
     let currentTime = startTime;
     for (let measure = 0; measure < measures; measure++) {
       for (let beat = 0; beat < beats; beat++) {
         const isAccent = this.isAccentedBeat(beat);
+        const scheduledTime = currentTime;
         Tone.Transport.schedule((time) => {
           this.playClick(time, isAccent);
           this.currentBeat = (this.currentBeat + 1) % beats;
           if (this.currentBeat === 0) {
             this.currentMeasure++;
           }
-        }, currentTime);
+        }, scheduledTime);
         currentTime += beatDuration;
       }
     }
