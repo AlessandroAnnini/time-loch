@@ -105,7 +105,7 @@ export class MetronomeEngine {
 
     // Reset measure counter for this section (starts at 0, will be incremented to 1 on first beat)
     let sectionMeasure = 0;
-    
+
     // Store section info for beat callback
     this.accentPattern = accentPattern || [];
     this.currentBeat = 0;

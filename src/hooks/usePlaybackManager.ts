@@ -79,7 +79,7 @@ export function usePlaybackManager() {
     advanceToNextSection,
     setCurrentMeasure,
   ]);
-  
+
   // Separate effect to handle volume changes during playback
   useEffect(() => {
     if (isPlaying) {

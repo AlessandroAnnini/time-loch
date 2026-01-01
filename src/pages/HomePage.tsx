@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { SongList } from '@/components/SongList';
 import { CreateSongDialog } from '@/components/CreateSongDialog';
 import { DeleteConfirmDialog } from '@/components/DeleteConfirmDialog';
+import { InstallButton } from '@/components/InstallButton';
 import { ModeToggle } from '@/components/mode-toggle';
 import { useUIStore } from '@/stores/useUIStore';
 
@@ -30,6 +31,7 @@ export function HomePage() {
           <nav
             className="ml-auto flex items-center gap-2"
             aria-label="Main navigation">
+            <InstallButton />
             <Button
               variant="ghost"
               size="icon"
