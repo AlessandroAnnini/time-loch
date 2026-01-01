@@ -36,7 +36,7 @@ export function AboutPage() {
               <img
                 src="/splash.png"
                 alt="Time Loch"
-                className="h-[600px] w-auto rounded-2xl shadow-2xl"
+                className="max-h-150 w-full max-w-md object-contain rounded-2xl shadow-2xl"
               />
             </div>
             <div className="space-y-2">
