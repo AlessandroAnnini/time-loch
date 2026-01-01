@@ -172,14 +172,14 @@ export function SongPage() {
                 </div>
               ) : (
                 song.notes && (
-                  <div className="flex items-start justify-between gap-2">
-                    <p className="text-base leading-relaxed whitespace-pre-wrap py-1 flex-1">
+                  <div className="flex items-start gap-2">
+                    <p className="text-base leading-relaxed whitespace-pre-wrap py-1 flex-1 min-w-0">
                       {song.notes}
                     </p>
                     <Button
                       size="icon"
                       variant="ghost"
-                      className="h-8 w-8 shrink-0"
+                      className="h-8 w-8 shrink-0 mt-0.5"
                       onClick={notesEdit.startEditing}
                       aria-label="Edit notes">
                       <Edit2 className="h-4 w-4" />
