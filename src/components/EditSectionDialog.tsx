@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import {
   Dialog,
@@ -36,15 +36,19 @@ export function EditSectionDialog() {
   const [noteValue, setNoteValue] = useState('4');
   const [measures, setMeasures] = useState('8');
 
-  // Initialize form with section data when dialog opens
-  const handleOpenChange = (open: boolean) => {
-    if (open && section) {
+  // Sync form state with section data when dialog opens
+  useEffect(() => {
+    if (isOpen && section) {
       setName(section.name);
       setBpm(section.bpm.toString());
       setBeats(section.timeSignature.beats.toString());
       setNoteValue(section.timeSignature.noteValue.toString());
       setMeasures(section.measures.toString());
-    } else if (!open) {
+    }
+  }, [isOpen, section]);
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
       closeDialog();
     }
   };
