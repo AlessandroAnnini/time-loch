@@ -6,7 +6,6 @@ export class MetronomeEngine {
   private loop: Tone.Loop | null = null;
   private currentSound: MetronomeSound = 'classic';
   private currentBeat = 0;
-  private currentMeasure = 0;
   private accentPattern: number[] = [];
   private onComplete: (() => void) | null = null;
   private onSectionComplete: (() => void) | null = null;
@@ -104,10 +103,12 @@ export class MetronomeEngine {
       Tone.Transport.bpm.value = bpm;
     }, startTime);
 
+    // Reset measure counter for this section (starts at 0, will be incremented to 1 on first beat)
+    let sectionMeasure = 0;
+    
     // Store section info for beat callback
     this.accentPattern = accentPattern || [];
     this.currentBeat = 0;
-    this.currentMeasure = 0;
 
     // Schedule all beats in this section using Transport time
     let currentTime = startTime;
@@ -118,9 +119,9 @@ export class MetronomeEngine {
         Tone.Transport.schedule((time) => {
           // Fire callback at START of measure (on accent beat)
           if (this.currentBeat === 0) {
-            this.currentMeasure++;
+            sectionMeasure++;
             if (this.onMeasureComplete) {
-              this.onMeasureComplete(this.currentMeasure);
+              this.onMeasureComplete(sectionMeasure);
             }
           }
           this.playClick(time, isAccent);
@@ -234,7 +235,6 @@ export class MetronomeEngine {
     }
 
     this.currentBeat = 0;
-    this.currentMeasure = 0;
   }
 
   public async updateVolume(volume: number): Promise<void> {

@@ -42,9 +42,10 @@
 ### Commit Strategy
 
 - Review git diff before committing
-- Group files when they represent one logical unit of work making atomic commits
+- Group files when they represent one logical unit of work making atomic commits, otherwise make multiple commits
 - Avoid mixing unrelated changes in a single commit
 - Use granularity suitable for changelog
+- remember to bump the version when needed using semantic versioning
 
 ### Commit Format
 
