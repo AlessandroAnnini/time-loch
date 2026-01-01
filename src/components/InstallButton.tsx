@@ -9,7 +9,8 @@ export function InstallButton() {
   const { canShowInstall, install, dismiss } = usePWAInstall({
     onInstalled: () => {
       toast.success('Installation complete!', {
-        description: 'Time Loch is now installed. Launch it from your home screen.',
+        description:
+          'Time Loch is now installed. Launch it from your home screen.',
       });
     },
   });

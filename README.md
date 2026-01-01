@@ -4,7 +4,7 @@
   <img src="public/splash.png" alt="Time Loch" width="400" />
 </div>
 
-An advanced metronome Progressive Web App (PWA) designed for musicians working with complex song structures. Built specifically for the band **[Devon Loch](https://devonloch.com)** to rehearse progressive rock compositions with multiple sections, varying tempos, and diverse time signatures.
+An advanced metronome Progressive Web App (PWA) designed for musicians working with complex song structures. Built specifically for the band **[Devon Loch](https://devonloch.com)** to rehearse songs with multiple sections, varying tempos, and diverse time signatures.
 
 **Name Origin:** A wordplay combining **Devon Loch** (band name) + **Time Lock** (locking tempo/rhythm) = **Time Loch**
 
