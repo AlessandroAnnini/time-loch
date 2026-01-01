@@ -26,7 +26,10 @@ export function HomePage() {
               alt="Time Loch Icon"
               className="h-8 w-8 rounded-lg"
             />
-            <h1 className="text-xl font-bold">Time Loch</h1>
+            <div className="flex items-baseline gap-2">
+              <h1 className="text-xl font-bold">Time Loch</h1>
+              <span className="text-xs text-muted-foreground">v0.0.0</span>
+            </div>
           </div>
           <nav
             className="ml-auto flex items-center gap-2"
