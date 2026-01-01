@@ -28,7 +28,7 @@ export function HomePage() {
             />
             <div className="flex items-baseline gap-2">
               <h1 className="text-xl font-bold">Time Loch</h1>
-              <span className="text-xs text-muted-foreground">v0.0.0</span>
+              <span className="text-xs text-muted-foreground">v0.1.0</span>
             </div>
           </div>
           <nav
