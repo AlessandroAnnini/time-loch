@@ -86,12 +86,13 @@ export const useUIStore = create<UIState>()((set) => ({
     });
   },
 
-  advanceToNextSection: () => {
+  // Advance to next section - ONLY updates UI state
+  // Does NOT restart playback (all sections already scheduled)
+  advanceToNextSection: () =>
     set((state) => ({
       currentSectionIndex: state.currentSectionIndex + 1,
       currentMeasureInSection: 1,
-    }));
-  },
+    })),
 
   setCurrentMeasure: (measure) => {
     set({ currentMeasureInSection: measure });

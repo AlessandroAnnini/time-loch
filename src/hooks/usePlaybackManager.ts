@@ -42,6 +42,8 @@ export function usePlaybackManager() {
     const metronome = getMetronome();
 
     // Start playback with all required parameters
+    // Schedule ALL sections from currentSectionIndex to end in ONE pass
+    // This ensures seamless transitions without gaps
     metronome.playSections(
       song.sections, // all sections
       currentSectionIndex, // start from this index
@@ -53,6 +55,8 @@ export function usePlaybackManager() {
       },
       () => {
         // Callback when each section completes
+        // ONLY update UI state - do NOT restart playback
+        // All sections are already scheduled in Transport
         advanceToNextSection();
       },
       (measure) => {
@@ -68,7 +72,6 @@ export function usePlaybackManager() {
   }, [
     isPlaying,
     currentSongId,
-    currentSectionIndex,
     songs,
     metronomeVolume,
     metronomeSound,
@@ -76,4 +79,12 @@ export function usePlaybackManager() {
     advanceToNextSection,
     setCurrentMeasure,
   ]);
+  
+  // Separate effect to handle volume changes during playback
+  useEffect(() => {
+    if (isPlaying) {
+      const metronome = getMetronome();
+      metronome.updateVolume(metronomeVolume);
+    }
+  }, [metronomeVolume, isPlaying]);
 }
