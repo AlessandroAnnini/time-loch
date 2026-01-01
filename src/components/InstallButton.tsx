@@ -6,7 +6,13 @@ import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { toast } from 'sonner';
 
 export function InstallButton() {
-  const { canShowInstall, install, dismiss } = usePWAInstall();
+  const { canShowInstall, install, dismiss } = usePWAInstall({
+    onInstalled: () => {
+      toast.success('Installation complete!', {
+        description: 'Time Loch is now installed. Launch it from your home screen.',
+      });
+    },
+  });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   if (!canShowInstall) {

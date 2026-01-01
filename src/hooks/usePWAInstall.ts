@@ -5,10 +5,14 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
+interface UsePWAInstallOptions {
+  onInstalled?: () => void;
+}
+
 const DISMISS_KEY = 'pwa-install-dismissed';
 const MAX_DISMISSALS = 3;
 
-export function usePWAInstall() {
+export function usePWAInstall(options?: UsePWAInstallOptions) {
   const [installPrompt, setInstallPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [isInstallable, setIsInstallable] = useState(false);
@@ -45,6 +49,10 @@ export function usePWAInstall() {
       setInstallPrompt(null);
       // Clear dismissal count when installed
       localStorage.removeItem(DISMISS_KEY);
+      // Notify completion
+      if (options?.onInstalled) {
+        options.onInstalled();
+      }
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -57,7 +65,7 @@ export function usePWAInstall() {
       );
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
-  }, []);
+  }, [options]);
 
   const install = async (): Promise<'accepted' | 'dismissed' | 'error'> => {
     if (!installPrompt) {
