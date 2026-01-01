@@ -43,7 +43,7 @@ export default defineConfig({
         ],
       },
       manifest: {
-        name: 'Time Loch - Metronome for Musicians',
+        name: 'Time Loch',
         short_name: 'Time Loch',
         description:
           'Advanced metronome with multi-section support for complex song structures',
