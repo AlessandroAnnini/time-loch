@@ -109,9 +109,23 @@ export const useUIStore = create<UIState>()((set) => ({
 
   // Navigation actions
   navigateTo: (page, songId) => {
-    set({
-      currentPage: page,
-      selectedSongId: songId ?? null,
+    set((state) => {
+      // Stop playback when navigating away from song page
+      if (state.isPlaying && page !== 'song') {
+        return {
+          currentPage: page,
+          selectedSongId: songId ?? null,
+          isPlaying: false,
+          currentSongId: null,
+          currentSectionIndex: 0,
+          currentMeasureInSection: 0,
+        };
+      }
+
+      return {
+        currentPage: page,
+        selectedSongId: songId ?? null,
+      };
     });
   },
 

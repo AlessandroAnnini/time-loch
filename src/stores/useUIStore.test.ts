@@ -285,14 +285,28 @@ describe('useUIStore', () => {
       expect(useUIStore.getState().currentMeasureInSection).toBe(5);
     });
 
-    it('should handle navigation during playback', () => {
+    it('should stop playback when navigating away from song page', () => {
+      const { startSongPlayback, navigateTo } = useUIStore.getState();
+
+      startSongPlayback('song-123');
+      expect(useUIStore.getState().isPlaying).toBe(true);
+
+      navigateTo('home');
+
+      const state = useUIStore.getState();
+      expect(state.isPlaying).toBe(false);
+      expect(state.currentPage).toBe('home');
+      expect(state.currentSongId).toBe(null);
+    });
+
+    it('should stop playback when navigating to about page', () => {
       const { startSongPlayback, navigateTo } = useUIStore.getState();
 
       startSongPlayback('song-123');
       navigateTo('about');
 
       const state = useUIStore.getState();
-      expect(state.isPlaying).toBe(true);
+      expect(state.isPlaying).toBe(false);
       expect(state.currentPage).toBe('about');
     });
   });
