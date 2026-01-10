@@ -134,13 +134,6 @@ export function SongPage() {
             </div>
 
             <div>
-              {!song.notes && (
-                <div className="mb-2">
-                  <label htmlFor="song-notes" className="text-sm font-medium">
-                    Notes
-                  </label>
-                </div>
-              )}
               {notesEdit.isEditing ? (
                 <div className="space-y-2">
                   <Textarea
@@ -171,21 +164,21 @@ export function SongPage() {
                   </p>
                 </div>
               ) : (
-                song.notes && (
-                  <div className="flex items-start gap-2">
-                    <p className="text-base leading-relaxed whitespace-pre-wrap py-1 flex-1 min-w-0">
-                      {song.notes}
-                    </p>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="h-8 w-8 shrink-0 mt-0.5"
-                      onClick={notesEdit.startEditing}
-                      aria-label="Edit notes">
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
+                <div className="flex items-start gap-2">
+                  <div className="text-base leading-relaxed whitespace-pre-wrap py-1 flex-1 min-w-0">
+                    {song.notes || (
+                      <span className="text-muted-foreground">Notes</span>
+                    )}
                   </div>
-                )
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-8 w-8 shrink-0 mt-0.5"
+                    onClick={notesEdit.startEditing}
+                    aria-label="Edit notes">
+                    <Edit2 className="h-4 w-4" />
+                  </Button>
+                </div>
               )}
             </div>
           </div>
