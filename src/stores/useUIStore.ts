@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { Page, DeleteTarget } from '@/types';
+import type { ShareableSongData } from '@/lib/share';
 
 interface UIState {
   // Playback state
@@ -19,6 +20,8 @@ interface UIState {
   editSectionId: string | null;
   isDeleteConfirmOpen: boolean;
   deleteTarget: DeleteTarget | null;
+  isImportSongDialogOpen: boolean;
+  pendingImportSong: ShareableSongData | null;
 
   // Actions - Playback
   setPlaybackState: (isPlaying: boolean) => void;
@@ -46,6 +49,8 @@ interface UIState {
     id: string,
     songId?: string
   ) => void;
+  openImportSongDialog: (songData: ShareableSongData) => void;
+  closeImportSongDialog: () => void;
 }
 
 export const useUIStore = create<UIState>()((set) => ({
@@ -62,6 +67,8 @@ export const useUIStore = create<UIState>()((set) => ({
   editSectionId: null,
   isDeleteConfirmOpen: false,
   deleteTarget: null,
+  isImportSongDialogOpen: false,
+  pendingImportSong: null,
 
   // Playback actions
   setPlaybackState: (isPlaying) => {
@@ -176,6 +183,20 @@ export const useUIStore = create<UIState>()((set) => ({
     set({
       isDeleteConfirmOpen: true,
       deleteTarget: { type, id, songId },
+    });
+  },
+
+  openImportSongDialog: (songData) => {
+    set({
+      isImportSongDialogOpen: true,
+      pendingImportSong: songData,
+    });
+  },
+
+  closeImportSongDialog: () => {
+    set({
+      isImportSongDialogOpen: false,
+      pendingImportSong: null,
     });
   },
 }));

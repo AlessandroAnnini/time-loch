@@ -1,4 +1,5 @@
-import { ArrowLeft, Plus, Edit2, Check, X } from 'lucide-react';
+import { ArrowLeft, Plus, Edit2, Check, X, Share2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,6 +12,7 @@ import { ModeToggle } from '@/components/mode-toggle';
 import { useAppStore } from '@/stores/useAppStore';
 import { useUIStore } from '@/stores/useUIStore';
 import { useInlineEdit } from '@/hooks/useInlineEdit';
+import { generateShareableUrl, isUrlTooLong } from '@/lib/share';
 
 export function SongPage() {
   const selectedSongId = useUIStore((state) => state.selectedSongId);
@@ -36,6 +38,51 @@ export function SongPage() {
     { allowEmpty: true }
   );
 
+  const handleShare = async () => {
+    if (!song) return;
+
+    // Warn if song has no sections
+    if (song.sections.length === 0) {
+      toast.info('Sharing empty song', {
+        description:
+          'This song has no sections yet. You can still share it, but it may be more useful to add sections first.',
+      });
+    }
+
+    try {
+      // Generate shareable URL
+      const shareUrl = generateShareableUrl(song);
+
+      // Check if URL is too long
+      if (isUrlTooLong(shareUrl)) {
+        toast.warning('Song is very complex', {
+          description:
+            'The share link is quite long and may not work in all contexts. Consider reducing the number of sections.',
+        });
+      }
+
+      // Try to copy to clipboard
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success('Share link copied!', {
+          description: 'You can now paste the link to share this song.',
+        });
+      } else {
+        // Fallback for browsers without clipboard API
+        // Show URL in a way user can manually copy
+        toast.info('Share link created', {
+          description: shareUrl,
+          duration: 10000,
+        });
+      }
+    } catch (error) {
+      toast.error('Failed to create share link', {
+        description:
+          error instanceof Error ? error.message : 'An unknown error occurred',
+      });
+    }
+  };
+
   if (!song) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -55,7 +102,7 @@ export function SongPage() {
       <header
         className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60"
         role="banner">
-        <div className="container flex h-14 items-center px-4">
+        <div className="container flex h-14 items-center gap-2 px-4">
           <Button
             variant="ghost"
             size="icon"
@@ -63,9 +110,16 @@ export function SongPage() {
             aria-label="Back to songs list">
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-xl font-bold ml-2 flex-1 truncate">
+          <h1 className="text-xl font-bold flex-1 truncate">
             {song.title}
           </h1>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleShare}
+            aria-label="Share song">
+            <Share2 className="h-5 w-5" />
+          </Button>
           <ModeToggle />
         </div>
       </header>
