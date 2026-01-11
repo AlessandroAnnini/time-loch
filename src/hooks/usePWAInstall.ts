@@ -9,28 +9,43 @@ interface UsePWAInstallOptions {
   onInstalled?: () => void;
 }
 
+/**
+ * Extended Navigator interface with iOS standalone property
+ */
+interface NavigatorStandalone extends Navigator {
+  standalone?: boolean;
+}
+
 const DISMISS_KEY = 'pwa-install-dismissed';
 const MAX_DISMISSALS = 3;
+
+/**
+ * Checks if the app is currently running in standalone mode (installed)
+ */
+function checkIsInstalled(): boolean {
+  return (
+    window.matchMedia('(display-mode: standalone)').matches ||
+    (window.navigator as NavigatorStandalone).standalone === true
+  );
+}
+
+/**
+ * Checks if the install prompt has been permanently dismissed
+ */
+function checkIsDismissed(): boolean {
+  const dismissCount = parseInt(localStorage.getItem(DISMISS_KEY) || '0', 10);
+  return dismissCount >= MAX_DISMISSALS;
+}
 
 export function usePWAInstall(options?: UsePWAInstallOptions) {
   const [installPrompt, setInstallPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [isInstallable, setIsInstallable] = useState(false);
-  const [isInstalled, setIsInstalled] = useState(false);
-  const [isDismissed, setIsDismissed] = useState(false);
+  // Initialize state directly without useEffect to avoid cascading renders
+  const [isInstalled, setIsInstalled] = useState(checkIsInstalled);
+  const [isDismissed, setIsDismissed] = useState(checkIsDismissed);
 
   useEffect(() => {
-    // Check if already installed
-    const checkInstalled =
-      window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as any).standalone === true;
-    setIsInstalled(checkInstalled);
-
-    // Check dismissal count
-    const dismissCount = parseInt(localStorage.getItem(DISMISS_KEY) || '0', 10);
-    if (dismissCount >= MAX_DISMISSALS) {
-      setIsDismissed(true);
-    }
 
     // Listen for beforeinstallprompt
     const handleBeforeInstallPrompt = (e: Event) => {

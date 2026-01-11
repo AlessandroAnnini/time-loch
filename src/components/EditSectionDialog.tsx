@@ -30,22 +30,29 @@ export function EditSectionDialog() {
   const song = songs.find((s) => s.id === selectedSongId);
   const section = song?.sections.find((s) => s.id === editSectionId);
 
-  const [name, setName] = useState('');
-  const [bpm, setBpm] = useState('120');
-  const [beats, setBeats] = useState('4');
-  const [noteValue, setNoteValue] = useState('4');
-  const [measures, setMeasures] = useState('8');
+  // Form state - use single state object to avoid cascading renders
+  const [formData, setFormData] = useState({
+    name: '',
+    bpm: '120',
+    beats: '4',
+    noteValue: '4',
+    measures: '8',
+  });
 
-  // Sync form state with section data when dialog opens
+  // Reset form when dialog opens or section changes (single setState call)
+  // Using section?.id instead of section to avoid resetting on every property change
   useEffect(() => {
     if (isOpen && section) {
-      setName(section.name);
-      setBpm(section.bpm.toString());
-      setBeats(section.timeSignature.beats.toString());
-      setNoteValue(section.timeSignature.noteValue.toString());
-      setMeasures(section.measures.toString());
+      setFormData({
+        name: section.name,
+        bpm: section.bpm.toString(),
+        beats: section.timeSignature.beats.toString(),
+        noteValue: section.timeSignature.noteValue.toString(),
+        measures: section.measures.toString(),
+      });
     }
-  }, [isOpen, section]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, section?.id]); // Only trigger on dialog open or section ID change
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -56,16 +63,16 @@ export function EditSectionDialog() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateRequired(name, 'Section name')) {
+    if (!validateRequired(formData.name, 'Section name')) {
       return;
     }
 
-    const bpmValue = Number(bpm);
+    const bpmValue = Number(formData.bpm);
     if (!validateBPM(bpmValue)) {
       return;
     }
 
-    const measuresValue = Number(measures);
+    const measuresValue = Number(formData.measures);
     if (!validateMeasures(measuresValue)) {
       return;
     }
@@ -76,13 +83,16 @@ export function EditSectionDialog() {
     }
 
     updateSection(selectedSongId, editSectionId, {
-      name: name.trim(),
+      name: formData.name.trim(),
       bpm: bpmValue,
-      timeSignature: { beats: Number(beats), noteValue: Number(noteValue) },
+      timeSignature: {
+        beats: Number(formData.beats),
+        noteValue: Number(formData.noteValue),
+      },
       measures: measuresValue,
     });
     toast.success('Section updated', {
-      description: `"${name.trim()}" has been updated.`,
+      description: `"${formData.name.trim()}" has been updated.`,
     });
     closeDialog();
   };
@@ -107,8 +117,10 @@ export function EditSectionDialog() {
               <Label htmlFor="edit-name">Section Name</Label>
               <Input
                 id="edit-name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, name: e.target.value }))
+                }
                 placeholder="e.g. Intro, Verse, Chorus"
                 autoFocus
                 required
@@ -120,8 +132,10 @@ export function EditSectionDialog() {
               <Input
                 id="edit-bpm"
                 type="number"
-                value={bpm}
-                onChange={(e) => setBpm(e.target.value)}
+                value={formData.bpm}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, bpm: e.target.value }))
+                }
                 min="35"
                 max="250"
                 required
@@ -134,8 +148,10 @@ export function EditSectionDialog() {
                 <Input
                   id="edit-beats"
                   type="number"
-                  value={beats}
-                  onChange={(e) => setBeats(e.target.value)}
+                  value={formData.beats}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, beats: e.target.value }))
+                  }
                   min="1"
                   max="16"
                   required
@@ -147,8 +163,13 @@ export function EditSectionDialog() {
                 <Input
                   id="edit-noteValue"
                   type="number"
-                  value={noteValue}
-                  onChange={(e) => setNoteValue(e.target.value)}
+                  value={formData.noteValue}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      noteValue: e.target.value,
+                    }))
+                  }
                   min="1"
                   max="16"
                   required
@@ -161,8 +182,10 @@ export function EditSectionDialog() {
               <Input
                 id="edit-measures"
                 type="number"
-                value={measures}
-                onChange={(e) => setMeasures(e.target.value)}
+                value={formData.measures}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, measures: e.target.value }))
+                }
                 min="1"
                 max="999"
                 required
@@ -174,7 +197,7 @@ export function EditSectionDialog() {
             <Button type="button" variant="outline" onClick={handleCancel}>
               Cancel
             </Button>
-            <Button type="submit" disabled={!name.trim()}>
+            <Button type="submit" disabled={!formData.name.trim()}>
               Save Changes
             </Button>
           </DialogFooter>

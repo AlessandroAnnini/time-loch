@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useAppStore } from './useAppStore';
-import type { Song, Section } from '@/types';
 
 describe('useAppStore', () => {
   beforeEach(() => {

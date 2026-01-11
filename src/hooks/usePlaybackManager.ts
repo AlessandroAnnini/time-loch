@@ -69,6 +69,10 @@ export function usePlaybackManager() {
     return () => {
       metronome.stop();
     };
+    // Intentionally omitting currentSectionIndex from deps to avoid restarting
+    // playback when section advances. The section transitions are handled
+    // internally by the metronome scheduling system.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     isPlaying,
     currentSongId,

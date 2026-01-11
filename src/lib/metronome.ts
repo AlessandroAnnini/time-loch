@@ -265,9 +265,18 @@ export const getMetronome = (): MetronomeEngine => {
   return metronomeInstance;
 };
 
+/**
+ * Extended Window interface for debug helpers
+ */
+interface WindowWithDebug extends Window {
+  enableMetronomeDebug?: (enabled?: boolean) => void;
+}
+
 // Debug helper - expose to window for console access
 if (typeof window !== 'undefined') {
-  (window as any).enableMetronomeDebug = (enabled: boolean = true) => {
+  (window as WindowWithDebug).enableMetronomeDebug = (
+    enabled: boolean = true
+  ) => {
     const metronome = getMetronome();
     metronome.enableDebugMode(enabled);
   };

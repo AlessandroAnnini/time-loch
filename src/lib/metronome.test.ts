@@ -38,17 +38,21 @@ vi.mock('tone', () => {
   });
 
   // Create proper constructor functions
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const MockSynth = function (this: unknown, _config: unknown) {
     return createMockSynth();
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const MockMembraneSynth = function (this: unknown, _config: unknown) {
     return createMockSynth();
   };
 
   const MockLoop = function (
     this: unknown,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _callback: unknown,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _interval: unknown
   ) {
     return createMockLoop();

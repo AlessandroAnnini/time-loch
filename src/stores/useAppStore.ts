@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { Song, Section, Theme, MetronomeSound } from '@/types';
+import { generateId } from '@/lib/utils';
 
 interface AppState {
   // Data
@@ -36,10 +37,6 @@ interface AppState {
   setMetronomeVolume: (volume: number) => void;
   setMetronomeSound: (sound: MetronomeSound) => void;
 }
-
-const generateId = (): string => {
-  return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-};
 
 export const useAppStore = create<AppState>()(
   persist(
