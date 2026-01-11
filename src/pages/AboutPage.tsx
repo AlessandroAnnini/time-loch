@@ -58,7 +58,7 @@ export function AboutPage() {
             <nav aria-label="Devon Loch links">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <a
-                  href="https://devonloch.com"
+                  href="https://devonloch.band"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 px-4 py-2 border rounded-lg hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
