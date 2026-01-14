@@ -6,6 +6,7 @@ import { DeleteConfirmDialog } from '@/components/DeleteConfirmDialog';
 import { InstallButton } from '@/components/InstallButton';
 import { ModeToggle } from '@/components/mode-toggle';
 import { useUIStore } from '@/stores/useUIStore';
+import packageJson from '../../package.json';
 
 export function HomePage() {
   const openCreateSongDialog = useUIStore(
@@ -28,7 +29,9 @@ export function HomePage() {
             />
             <div className="flex items-baseline gap-2">
               <h1 className="text-xl font-bold">Time Loch</h1>
-              <span className="text-xs text-muted-foreground">v0.3.1</span>
+              <span className="text-xs text-muted-foreground">
+                v{packageJson.version}
+              </span>
             </div>
           </div>
           <nav
