@@ -42,10 +42,10 @@ export function AboutPage() {
             <div className="space-y-2">
               <h1 className="text-4xl font-bold tracking-tight">Time Loch</h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                A metronome app designed for musicians who practice with complex
-                song structures. Define your song once, then focus on playing -
-                Time Loch handles the tempo changes, time signatures, and
-                section transitions automatically.
+                A metronome designed for songs with changing tempos. Create your
+                song's <strong>tempo map</strong> once—defining BPM and time
+                signature for each section—then Time Loch handles all transitions
+                automatically while you practice.
               </p>
             </div>
           </div>

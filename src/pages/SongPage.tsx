@@ -110,17 +110,59 @@ export function SongPage() {
             aria-label="Back to songs list">
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-xl font-bold flex-1 truncate">
-            {song.title}
-          </h1>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleShare}
-            aria-label="Share song">
-            <Share2 className="h-5 w-5" />
-          </Button>
-          <ModeToggle />
+          {titleEdit.isEditing ? (
+            <>
+              <Input
+                id="song-title-header"
+                value={titleEdit.value}
+                onChange={(e) => titleEdit.setValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') titleEdit.handleSave();
+                  if (e.key === 'Escape') titleEdit.handleCancel();
+                }}
+                placeholder="Enter song title"
+                className="flex-1 h-9"
+                autoFocus
+                aria-label="Edit song title"
+                aria-required="true"
+              />
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={titleEdit.handleSave}
+                aria-label="Save title">
+                <Check className="h-4 w-4" />
+              </Button>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={titleEdit.handleCancel}
+                aria-label="Cancel editing">
+                <X className="h-4 w-4" />
+              </Button>
+            </>
+          ) : (
+            <>
+              <h1 className="text-xl font-bold flex-1 truncate">
+                {song.title}
+              </h1>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={titleEdit.startEditing}
+                aria-label="Edit title">
+                <Edit2 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleShare}
+                aria-label="Share song">
+                <Share2 className="h-5 w-5" />
+              </Button>
+              <ModeToggle />
+            </>
+          )}
         </div>
       </header>
 
@@ -132,61 +174,6 @@ export function SongPage() {
         {/* Song Details */}
         <section aria-label="Song information">
           <div className="space-y-4">
-            <div>
-              {!song.title && (
-                <div className="mb-2">
-                  <label htmlFor="song-title" className="text-sm font-medium">
-                    Song Title
-                  </label>
-                </div>
-              )}
-              {titleEdit.isEditing ? (
-                <div className="flex gap-2">
-                  <Input
-                    id="song-title"
-                    value={titleEdit.value}
-                    onChange={(e) => titleEdit.setValue(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') titleEdit.handleSave();
-                      if (e.key === 'Escape') titleEdit.handleCancel();
-                    }}
-                    placeholder="Enter song title"
-                    className="text-lg"
-                    autoFocus
-                    aria-required="true"
-                  />
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={titleEdit.handleSave}
-                    aria-label="Save title">
-                    <Check className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={titleEdit.handleCancel}
-                    aria-label="Cancel editing">
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ) : (
-                <div className="flex items-center justify-between gap-2">
-                  <h2 className="text-2xl font-semibold py-1 flex-1">
-                    {song.title}
-                  </h2>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-8 w-8 shrink-0"
-                    onClick={titleEdit.startEditing}
-                    aria-label="Edit title">
-                    <Edit2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              )}
-            </div>
-
             <div>
               {notesEdit.isEditing ? (
                 <div className="space-y-2">
