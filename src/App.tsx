@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { useUIStore } from '@/stores/useUIStore';
 import { usePlaybackManager } from '@/hooks/usePlaybackManager';
 import { useShareUrlHandler } from '@/hooks/useShareUrlHandler';
+import { usePWAUpdate } from '@/hooks/usePWAUpdate';
 
 function App() {
   const currentPage = useUIStore((state) => state.currentPage);
@@ -16,6 +17,9 @@ function App() {
 
   // Handle shared song URLs
   useShareUrlHandler();
+
+  // Handle PWA service worker updates
+  usePWAUpdate();
 
   return (
     <ThemeProvider>
